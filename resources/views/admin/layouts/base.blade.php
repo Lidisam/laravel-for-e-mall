@@ -92,7 +92,7 @@ desired effect
         <li class="active">Here</li>
       </ol>--}}
       <h6>
-      {!! Breadcrumbs::render(Route::currentRouteName()) !!}
+{{--      {!! Breadcrumbs::render(Route::currentRouteName()) !!}--}}
       </h6>
     </section>
 

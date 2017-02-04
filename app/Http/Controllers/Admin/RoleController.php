@@ -146,7 +146,7 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param PermissionUpdateRequest|Request $request
+     * @param PermissionUpdateRequest|RoleUpdateRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */

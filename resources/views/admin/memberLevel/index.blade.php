@@ -7,12 +7,13 @@
 @section('pageDesc','DashBoard')
 
 @section('content')
+
     <div class="row page-title-row" style="margin:5px;">
         <div class="col-md-6">
         </div>
         <div class="col-md-6 text-right">
-            <a href="/admin/role/create" class="btn btn-success btn-md">
-                <i class="fa fa-plus-circle"></i> 添加角色
+            <a href="/admin/memberLevel/create" class="btn btn-success btn-md">
+                <i class="fa fa-plus-circle"></i> 添加
             </a>
         </div>
     </div>
@@ -24,8 +25,9 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-xs-12">
             <div class="box">
+
                 @include('admin.partials.errors')
                 @include('admin.partials.success')
                 <div class="box-body">
@@ -33,11 +35,11 @@
                         <thead>
                         <tr>
                             <th data-sortable="false" class="hidden-sm"></th>
-                            <th class="hidden-sm">角色名称</th>
-                            <th class="hidden-sm">角色标签</th>
-                            <th class="hidden-sm">角色概述</th>
-                            <th class="hidden-md">角色创建日期</th>
-                            <th class="hidden-md">角色修改日期</th>
+                            <th class="hidden-sm">等级名</th>
+                            <th class="hidden-sm">积分下限</th>
+                            <th class="hidden-md">积分上限</th>
+                            <th class="hidden-md">折扣率</th>
+                            <th class="hidden-md">创建时间</th>
                             <th data-sortable="false">操作</th>
                         </tr>
                         </thead>
@@ -66,7 +68,7 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <form class="deleteForm" method="POST" action="/admin/role">
+                    <form class="deleteForm" method="POST" action="/admin/memberLevel">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -75,6 +77,7 @@
                         </button>
                     </form>
                 </div>
+
             </div>
             @stop
 
@@ -109,7 +112,7 @@
                             order: [[1, "desc"]],
                             serverSide: true,
                             ajax: {
-                                url: '/admin/role/index',
+                                url: '/admin/memberLevel/index',
                                 type: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -117,18 +120,21 @@
                             },
                             "columns": [
                                 {"data": "id"},
-                                {"data": "name"},
-                                {"data": "display_name"},
-                                {"data": "description"},
+                                {"data": "level_name"},
+                                {"data": "bottom_num"},
+                                {"data": "top_num"},
+                                {"data": "rate"},
                                 {"data": "created_at"},
-                                {"data": "updated_at"},
                                 {"data": "action"}
                             ],
                             columnDefs: [
                                 {
                                     'targets': -1, "render": function (data, type, row) {
-                                    return '<a style="margin:3px;" href="/admin/role/' + row['id'] + '/edit" class="X-Small btn-xs text-success"><i class="fa fa-edit"></i> 编辑</a>' +
-                                        '<a style="margin:3px;" href="#" attr="' + row['id'] + '" class="delBtn X-Small btn-xs text-danger"><i class="fa fa-times-circle"></i> 删除</a>';
+                                    var caozuo = '<a style="margin:3px;" href="/admin/memberLevel/' + row['id'] + '/edit" class="X-Small btn-xs text-success "><i class="fa fa-edit"></i> 编辑</a>';
+                                    if (row['id'] != 1) {
+                                        caozuo += '<a style="margin:3px;" href="#" attr="' + row['id'] + '" class="delBtn X-Small btn-xs text-danger "><i class="fa fa-times-circle-o"></i> 删除</a>';
+                                    }
+                                    return caozuo;
                                 }
                                 }
                             ]
@@ -150,7 +156,7 @@
 
                         $("table").delegate('.delBtn', 'click', function () {
                             var id = $(this).attr('attr');
-                            $('.deleteForm').attr('action', '/admin/role/' + id);
+                            $('.deleteForm').attr('action', '/admin/memberLevel/' + id);
                             $("#modal-delete").modal();
                         });
 

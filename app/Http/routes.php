@@ -51,6 +51,12 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth','authAdmin','men
     Route::post('admin/user/store', ['as' => 'admin.user.create', 'uses' => 'UserController@store']); //添加
 
 
+    //会员等级管理
+    Route::get('admin/memberLevel/manage', ['as' => 'admin.memberLevel.manage', 'uses' => 'MemberLevelController@index']);  //用户管理
+    Route::post('admin/memberLevel/index', ['as' => 'admin.memberLevel.index', 'uses' => 'MemberLevelController@index']);
+    Route::resource('admin/memberLevel', 'MemberLevelController');
+    Route::put('admin/memberLevel/update', ['as' => 'admin.memberLevel.edit', 'uses' => 'UserController@update']); //修改
+    Route::post('admin/memberLevel/store', ['as' => 'admin.memberLevel.create', 'uses' => 'UserController@store']); //添加
 });
 
 Route::get('admin', function () {
