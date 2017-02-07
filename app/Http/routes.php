@@ -10,21 +10,21 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/',function(){
+Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/home',function(){
+Route::get('/home', function () {
     return view('welcome');
 });
 
-Route::get('admin/index', ['as' => 'admin.index', 'middleware' => ['auth','menu'], 'uses'=>'Admin\\IndexController@index']);
+Route::get('admin/index', ['as' => 'admin.index', 'middleware' => ['auth', 'menu'], 'uses' => 'Admin\\IndexController@index']);
 
-$this->group(['namespace' => 'Admin','prefix' => '/admin',], function () {
+$this->group(['namespace' => 'Admin', 'prefix' => '/admin',], function () {
     Route::auth();
 });
 
-$router->group(['namespace' => 'Admin', 'middleware' => ['auth','authAdmin','menu']], function () {
+$router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'menu']], function () {
     //权限管理路由
     Route::get('admin/permission/{cid}/create', ['as' => 'admin.permission.create', 'uses' => 'PermissionController@create']);
     Route::get('admin/permission/{cid?}', ['as' => 'admin.permission.index', 'uses' => 'PermissionController@index']);
@@ -66,6 +66,14 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth','authAdmin','men
     Route::post('admin/brand/store', ['as' => 'admin.brand.create', 'uses' => 'BrandController@store']); //添加
 
 });
+
+
+/*------
+组件测试
+----------*/
+Route::get('webUpload', ['as' => 'packages.webUpload.index', 'uses' => 'WebUploadController@index']);  //图片上传
+Route::any('webUpload2', ['as' => 'packages.webUpload.up', 'uses' => 'WebUploadController@up']);  //图片提交
+
 
 Route::get('admin', function () {
     return redirect('/admin/index');

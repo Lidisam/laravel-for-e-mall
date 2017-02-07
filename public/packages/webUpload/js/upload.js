@@ -2,73 +2,73 @@
     // 当domReady的时候开始初始化
     $(function () {
         var $wrap = $('#uploader'),
-                // 图片容器
-                $queue = $('<ul class="filelist"></ul>')
+            // 图片容器
+            $queue = $('<ul class="filelist"></ul>')
                 .appendTo($wrap.find('.queueList')),
-                // 状态栏，包括进度和控制按钮
-                $statusBar = $wrap.find('.statusBar'),
-                // 文件总体选择信息。
-                $info = $statusBar.find('.info'),
-                // 上传按钮
-                $upload = $wrap.find('.uploadBtn'),
-                // 没选择文件之前的内容。
-                $placeHolder = $wrap.find('.placeholder'),
-                $progress = $statusBar.find('.progress').hide(),
-                // 添加的文件数量
-                fileCount = 0,
-                // 添加的文件总大小
-                fileSize = 0,
-                // 优化retina, 在retina下这个值是2
-                ratio = window.devicePixelRatio || 1,
-                // 缩略图大小
-                thumbnailWidth = 110 * ratio,
-                thumbnailHeight = 110 * ratio,
-                // 可能有pedding, ready, uploading, confirm, done.
-                state = 'pedding',
-                // 所有文件的进度信息，key为file id
-                percentages = {},
-                // 判断浏览器是否支持图片的base64
-                isSupportBase64 = (function () {
-                    var data = new Image();
-                    var support = true;
-                    data.onload = data.onerror = function () {
-                        if (this.width != 1 || this.height != 1) {
-                            support = false;
-                        }
+            // 状态栏，包括进度和控制按钮
+            $statusBar = $wrap.find('.statusBar'),
+            // 文件总体选择信息。
+            $info = $statusBar.find('.info'),
+            // 上传按钮
+            $upload = $wrap.find('.uploadBtn'),
+            // 没选择文件之前的内容。
+            $placeHolder = $wrap.find('.placeholder'),
+            $progress = $statusBar.find('.progress').hide(),
+            // 添加的文件数量
+            fileCount = 0,
+            // 添加的文件总大小
+            fileSize = 0,
+            // 优化retina, 在retina下这个值是2
+            ratio = window.devicePixelRatio || 1,
+            // 缩略图大小
+            thumbnailWidth = 110 * ratio,
+            thumbnailHeight = 110 * ratio,
+            // 可能有pedding, ready, uploading, confirm, done.
+            state = 'pedding',
+            // 所有文件的进度信息，key为file id
+            percentages = {},
+            // 判断浏览器是否支持图片的base64
+            isSupportBase64 = (function () {
+                var data = new Image();
+                var support = true;
+                data.onload = data.onerror = function () {
+                    if (this.width != 1 || this.height != 1) {
+                        support = false;
                     }
-                    data.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
-                    return support;
-                })(),
-                // 检测是否已经安装flash，检测flash的版本
-                flashVersion = (function () {
-                    var version;
+                }
+                data.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+                return support;
+            })(),
+            // 检测是否已经安装flash，检测flash的版本
+            flashVersion = (function () {
+                var version;
 
+                try {
+                    version = navigator.plugins['Shockwave Flash'];
+                    version = version.description;
+                } catch (ex) {
                     try {
-                        version = navigator.plugins[ 'Shockwave Flash' ];
-                        version = version.description;
-                    } catch (ex) {
-                        try {
-                            version = new ActiveXObject('ShockwaveFlash.ShockwaveFlash')
-                                    .GetVariable('$version');
-                        } catch (ex2) {
-                            version = '0.0';
-                        }
+                        version = new ActiveXObject('ShockwaveFlash.ShockwaveFlash')
+                            .GetVariable('$version');
+                    } catch (ex2) {
+                        version = '0.0';
                     }
-                    version = version.match(/\d+/g);
-                    return parseFloat(version[ 0 ] + '.' + version[ 1 ], 10);
-                })(),
-                supportTransition = (function () {
-                    var s = document.createElement('p').style,
-                            r = 'transition' in s ||
-                            'WebkitTransition' in s ||
-                            'MozTransition' in s ||
-                            'msTransition' in s ||
-                            'OTransition' in s;
-                    s = null;
-                    return r;
-                })(),
-                // WebUploader实例
-                uploader;
+                }
+                version = version.match(/\d+/g);
+                return parseFloat(version[0] + '.' + version[1], 10);
+            })(),
+            supportTransition = (function () {
+                var s = document.createElement('p').style,
+                    r = 'transition' in s ||
+                        'WebkitTransition' in s ||
+                        'MozTransition' in s ||
+                        'msTransition' in s ||
+                        'OTransition' in s;
+                s = null;
+                return r;
+            })(),
+            // WebUploader实例
+            uploader;
 
         if (!WebUploader.Uploader.support('flash') && WebUploader.browser.ie) {
 
@@ -95,17 +95,17 @@
                     var swf = './expressInstall.swf';
                     // insert flash object
                     var html = '<object type="application/' +
-                            'x-shockwave-flash" data="' + swf + '" ';
+                        'x-shockwave-flash" data="' + swf + '" ';
 
                     if (WebUploader.browser.ie) {
                         html += 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" ';
                     }
 
                     html += 'width="100%" height="100%" style="outline:0">' +
-                            '<param name="movie" value="' + swf + '" />' +
-                            '<param name="wmode" value="transparent" />' +
-                            '<param name="allowscriptaccess" value="always" />' +
-                            '</object>';
+                        '<param name="movie" value="' + swf + '" />' +
+                        '<param name="wmode" value="transparent" />' +
+                        '<param name="allowscriptaccess" value="always" />' +
+                        '</object>';
 
                     container.html(html);
 
@@ -129,14 +129,16 @@
                 label: '点击选择图片'
             },
             formData: {
-                uid: 123
+                uid: 123,
+                _token: $("meta[name='_token']").attr('content')
             },
             dnd: '#dndArea',
             paste: '#uploader',
-            swf: 'js/Uploader.swf',
+            swf: 'packages/webUpload/js/Uploader.swf',
             chunked: false,
             chunkSize: 512 * 1024,
-            server: 'server/fileupload.php',
+            server: 'webUpload2',
+            // X-CSRF-Token: $("meta[name='_token']").attr('content'),
             // runtimeOrder: 'flash',
 
             // accept: {
@@ -155,14 +157,14 @@
         // 拖拽时不接受 js, txt 文件。
         uploader.on('dndAccept', function (items) {
             var denied = false,
-                    len = items.length,
-                    i = 0,
-                    // 修改js类型
-                    unAllowed = 'text/plain;application/javascript ';
+                len = items.length,
+                i = 0,
+                // 修改js类型
+                unAllowed = 'text/plain;application/javascript ';
 
             for (; i < len; i++) {
                 // 如果在列表里面
-                if (~unAllowed.indexOf(items[ i ].type)) {
+                if (~unAllowed.indexOf(items[i].type)) {
                     denied = true;
                     break;
                 }
@@ -198,30 +200,30 @@
                     '<p class="imgWrap"></p>' +
                     '<p class="progress"><span></span></p>' +
                     '</li>'),
-                    $btns = $('<div class="file-panel">' +
-                            '<span class="cancel">删除</span>' +
-                            '<span class="rotateRight">向右旋转</span>' +
-                            '<span class="rotateLeft">向左旋转</span></div>').appendTo($li),
-                    $prgress = $li.find('p.progress span'),
-                    $wrap = $li.find('p.imgWrap'),
-                    $info = $('<p class="error"></p>'),
-                    showError = function (code) {
-                        switch (code) {
-                            case 'exceed_size':
-                                text = '文件大小超出';
-                                break;
+                $btns = $('<div class="file-panel">' +
+                    '<span class="cancel">删除</span>' +
+                    '<span class="rotateRight">向右旋转</span>' +
+                    '<span class="rotateLeft">向左旋转</span></div>').appendTo($li),
+                $prgress = $li.find('p.progress span'),
+                $wrap = $li.find('p.imgWrap'),
+                $info = $('<p class="error"></p>'),
+                showError = function (code) {
+                    switch (code) {
+                        case 'exceed_size':
+                            text = '文件大小超出';
+                            break;
 
-                            case 'interrupt':
-                                text = '上传暂停';
-                                break;
+                        case 'interrupt':
+                            text = '上传暂停';
+                            break;
 
-                            default:
-                                text = '上传失败，请重试';
-                                break;
-                        }
+                        default:
+                            text = '上传失败，请重试';
+                            break;
+                    }
 
-                        $info.text(text).appendTo($li);
-                    };
+                    $info.text(text).appendTo($li);
+                };
 
             if (file.getStatus() === 'invalid') {
                 showError(file.statusText);
@@ -255,7 +257,7 @@
                     }
                 }, thumbnailWidth, thumbnailHeight);
 
-                percentages[ file.id ] = [file.size, 0];
+                percentages[file.id] = [file.size, 0];
                 file.rotation = 0;
             }
 
@@ -271,11 +273,11 @@
                 if (cur === 'error' || cur === 'invalid') {
                     console.log(file.statusText);
                     showError(file.statusText);
-                    percentages[ file.id ][ 1 ] = 1;
+                    percentages[file.id][1] = 1;
                 } else if (cur === 'interrupt') {
                     showError('interrupt');
                 } else if (cur === 'queued') {
-                    percentages[ file.id ][ 1 ] = 0;
+                    percentages[file.id][1] = 0;
                 } else if (cur === 'progress') {
                     $info.remove();
                     $prgress.css('display', 'block');
@@ -296,7 +298,7 @@
 
             $btns.on('click', 'span', function () {
                 var index = $(this).index(),
-                        deg;
+                    deg;
 
                 switch (index) {
                     case 0:
@@ -350,20 +352,20 @@
         function removeFile(file) {
             var $li = $('#' + file.id);
 
-            delete percentages[ file.id ];
+            delete percentages[file.id];
             updateTotalProgress();
             $li.off().find('.file-panel').off().end().remove();
         }
 
         function updateTotalProgress() {
             var loaded = 0,
-                    total = 0,
-                    spans = $progress.children(),
-                    percent;
+                total = 0,
+                spans = $progress.children(),
+                percent;
 
             $.each(percentages, function (k, v) {
-                total += v[ 0 ];
-                loaded += v[ 0 ] * v[ 1 ];
+                total += v[0];
+                loaded += v[0] * v[1];
             });
 
             percent = total ? loaded / total : 0;
@@ -379,19 +381,19 @@
 
             if (state === 'ready') {
                 text = '选中' + fileCount + '张图片，共' +
-                        WebUploader.formatSize(fileSize) + '。';
+                    WebUploader.formatSize(fileSize) + '。';
             } else if (state === 'confirm') {
                 stats = uploader.getStats();
                 if (stats.uploadFailNum) {
                     text = '已成功上传' + stats.successNum + '张照片至XX相册，' +
-                            stats.uploadFailNum + '张照片上传失败，<a class="retry" href="#">重新上传</a>失败图片或<a class="ignore" href="#">忽略</a>'
+                        stats.uploadFailNum + '张照片上传失败，<a class="retry" href="#">重新上传</a>失败图片或<a class="ignore" href="#">忽略</a>'
                 }
 
             } else {
                 stats = uploader.getStats();
                 text = '共' + fileCount + '张（' +
-                        WebUploader.formatSize(fileSize) +
-                        '），已上传' + stats.successNum + '张';
+                    WebUploader.formatSize(fileSize) +
+                    '），已上传' + stats.successNum + '张';
 
                 if (stats.uploadFailNum) {
                     text += '，失败' + stats.uploadFailNum + '张';
@@ -467,10 +469,10 @@
 
         uploader.onUploadProgress = function (file, percentage) {
             var $li = $('#' + file.id),
-                    $percent = $li.find('.progress span');
+                $percent = $li.find('.progress span');
 
             $percent.css('width', percentage * 100 + '%');
-            percentages[ file.id ][ 1 ] = percentage;
+            percentages[file.id][1] = percentage;
             updateTotalProgress();
         };
 
