@@ -30,7 +30,6 @@ class MemberLevelStoreRequest extends Request
         ];
     }
 
-
     /**
      * Get the validation rules that apply to the request.
      *

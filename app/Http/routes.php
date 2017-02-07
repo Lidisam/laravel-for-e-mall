@@ -55,8 +55,16 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth','authAdmin','men
     Route::get('admin/memberLevel/manage', ['as' => 'admin.memberLevel.manage', 'uses' => 'MemberLevelController@index']);  //用户管理
     Route::post('admin/memberLevel/index', ['as' => 'admin.memberLevel.index', 'uses' => 'MemberLevelController@index']);
     Route::resource('admin/memberLevel', 'MemberLevelController');
-    Route::put('admin/memberLevel/update', ['as' => 'admin.memberLevel.edit', 'uses' => 'UserController@update']); //修改
-    Route::post('admin/memberLevel/store', ['as' => 'admin.memberLevel.create', 'uses' => 'UserController@store']); //添加
+    Route::put('admin/memberLevel/update', ['as' => 'admin.memberLevel.edit', 'uses' => 'MemberLevelController@update']); //修改
+    Route::post('admin/memberLevel/store', ['as' => 'admin.memberLevel.create', 'uses' => 'MemberLevelController@store']); //添加
+
+    //品牌管理
+    Route::get('admin/brand/manage', ['as' => 'admin.brand.manage', 'uses' => 'BrandController@index']);
+    Route::post('admin/brand/index', ['as' => 'admin.brand.index', 'uses' => 'BrandController@index']);
+    Route::resource('admin/brand', 'BrandController');
+    Route::put('admin/brand/update', ['as' => 'admin.brand.edit', 'uses' => 'BrandController@update']); //修改
+    Route::post('admin/brand/store', ['as' => 'admin.brand.create', 'uses' => 'BrandController@store']); //添加
+
 });
 
 Route::get('admin', function () {
