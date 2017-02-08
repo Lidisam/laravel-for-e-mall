@@ -65,6 +65,14 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     Route::put('admin/brand/update', ['as' => 'admin.brand.edit', 'uses' => 'BrandController@update']); //修改
     Route::post('admin/brand/store', ['as' => 'admin.brand.create', 'uses' => 'BrandController@store']); //添加
 
+    //商品分类管理
+    Route::get('admin/category/manage', ['as' => 'admin.category.manage', 'uses' => 'CategoryController@index']);
+    Route::post('admin/category/index', ['as' => 'admin.category.index', 'uses' => 'CategoryController@index']);
+    Route::resource('admin/category', 'CategoryController');
+    Route::put('admin/category/update', ['as' => 'admin.category.edit', 'uses' => 'CategoryController@update']); //修改
+    Route::post('admin/category/store', ['as' => 'admin.category.create', 'uses' => 'CategoryController@store']); //添加
+
+
 });
 
 
