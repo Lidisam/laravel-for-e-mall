@@ -72,6 +72,12 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     Route::put('admin/category/update', ['as' => 'admin.category.edit', 'uses' => 'CategoryController@update']); //修改
     Route::post('admin/category/store', ['as' => 'admin.category.create', 'uses' => 'CategoryController@store']); //添加
 
+    //类型管理
+    Route::get('admin/type/manage', ['as' => 'admin.type.manage', 'uses' => 'TypeController@index']);
+    Route::post('admin/type/index', ['as' => 'admin.type.index', 'uses' => 'TypeController@index']);
+    Route::resource('admin/type', 'TypeController');
+    Route::put('admin/type/update', ['as' => 'admin.type.edit', 'uses' => 'TypeController@update']); //修改
+    Route::post('admin/type/store', ['as' => 'admin.type.create', 'uses' => 'TypeController@store']); //添加
 
 });
 
