@@ -27,6 +27,13 @@
                                 <input type="hidden" name="id" value="{{ $id }}">
                                 @include('admin.brand._form')
                                 <div class="form-group">
+                                    <label for="tag" class="col-md-3 control-label"></label>
+                                    <div class="col-md-5">
+                                        <img src="/{{ $logo }}" alt="{{ $brand_name }}"
+                                             style="max-height: 150px;max-width: 500px">
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <div class="col-md-7 col-md-offset-3">
                                         <button type="submit" class="btn btn-primary btn-md">
                                             <i class="fa fa-plus-circle"></i>

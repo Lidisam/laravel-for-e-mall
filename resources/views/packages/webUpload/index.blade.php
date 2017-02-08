@@ -5,7 +5,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>演示：WebUploader大文件上传</title>
     <meta name="keywords" content="webupload大文件上传"/>
+    {{--设置token验证--}}
     <meta name="_token" content="{{ csrf_token() }}"/>
+    {{--设置当前保存url--}}
+    <meta name="_url" content="webUpload2"/>
     <meta name="description"
           content="我们在上传大文件时都遇到过这样或那样的问题,设置很大的maxRequestLength值并不能完全解决问题,除了允许你上传大文件外，还能实时显示上传进度并捕获上传中的错误信息"/>
     <link rel="stylesheet" type="text/css" href="packages/webUpload/css/webuploader.css"/>

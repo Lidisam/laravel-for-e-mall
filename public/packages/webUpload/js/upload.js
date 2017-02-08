@@ -137,7 +137,7 @@
             swf: 'packages/webUpload/js/Uploader.swf',
             chunked: false,
             chunkSize: 512 * 1024,
-            server: 'webUpload2',
+            server: $("meta[name='_url']").attr('content'),
             // X-CSRF-Token: $("meta[name='_token']").attr('content'),
             // runtimeOrder: 'flash',
 

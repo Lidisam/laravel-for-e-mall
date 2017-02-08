@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\BrandStoreRequest;
+use App\Http\Requests\BrandUpdateRequest;
 use App\Http\Requests\MemberLevelUpdateRequest;
 use App\Models\Brand;
 use App\Models\MemberLevel;
@@ -98,20 +99,30 @@ class BrandController extends Controller
 
     /**
      * 修改操作页
-     * @param MemberLevelUpdateRequest $request
+     * @param BrandUpdateRequest $request
      * @param $id
      * @return mixed
      * @internal param $MemberLevelUpdateRequest
      */
-    public function update(MemberLevelUpdateRequest $request, $id)
+    public function update(BrandUpdateRequest $request, $id)
     {
-        $info = MemberLevel::find((int)$id);
+        $info = Brand::find((int)$id);
+        $logo = $info->logo;
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
         unset($info->perms);
+        /*****上传文件*****/
+        if ($request->file('logo')) {   //文件存在
+            $fileRes = $this->uploadFile($request, 'brand', 'logo');
+            if (!$fileRes['status'])
+                return redirect()->back()->withErrors($fileRes['msg']);
+            /********保存*******/
+            is_file($logo) && unlink($logo);  //判断是否存在且删除
+            $info->logo = $fileRes['savePath'] . '/' . $fileRes['path'];
+        }
         $info->save();
-        return redirect('/admin/memberLevel')->withSuccess('修改成功！');
+        return redirect('/admin/brand')->withSuccess('修改成功！');
     }
 
     public function show()
@@ -126,7 +137,7 @@ class BrandController extends Controller
      */
     public function destroy($id)
     {
-        $info = MemberLevel::find((int)$id);
+        $info = Brand::find((int)$id);
         if ($info) {
             $info->delete();
         } else {
