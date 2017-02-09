@@ -13,7 +13,7 @@ class CreateTypesTable extends Migration
     public function up()
     {
         Schema::create('types', function (Blueprint $table) {
-            $table->increments('id');
+            $table->tinyInteger('id')->unsigned()->increments('id');
             $table->string('type_name', 150)->comment("类型名");
             $table->timestamps();
         });

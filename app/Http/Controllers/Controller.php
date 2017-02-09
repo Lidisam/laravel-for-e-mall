@@ -23,7 +23,15 @@ class Controller extends BaseController
     public function getConditions($query, $map)
     {
         foreach ($map as $key => $value) {
-            $query = $query->where($key, 'like', $value);
+            //数组情况下为and或or的连接
+            if (is_array($value)) {
+                if ($value['way'] == 'and')
+                    $query = $query->where($key, $value['op'], $value['value']);
+                else
+                    $query = $query->orWhere($key, $value['op'], $value['value']);
+            } else {
+                $query = $query->where($key, 'like', $value);
+            }
         }
         return $query;
     }
@@ -130,15 +138,15 @@ class Controller extends BaseController
     /**
      * 生成缩略图
      * data参数为：
-        $thumb_setting = array(
-        'size' => array(
-        'width' => 150,
-        'height' => 150
-        ),
-        'quality' => 60,
-        'path' => $fileRes['savePath'] . '/' . $fileRes['path'],
-        'thumb_path' => $fileRes['savePath'] . '/thumb_' . $fileRes['path']
-        );
+     * $thumb_setting = array(
+     * 'size' => array(
+     * 'width' => 150,
+     * 'height' => 150
+     * ),
+     * 'quality' => 60,
+     * 'path' => $fileRes['savePath'] . '/' . $fileRes['path'],
+     * 'thumb_path' => $fileRes['savePath'] . '/thumb_' . $fileRes['path']
+     * );
      * @param array $data
      * @return array
      */

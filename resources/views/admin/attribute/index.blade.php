@@ -12,7 +12,7 @@
         <div class="col-md-6">
         </div>
         <div class="col-md-6 text-right">
-            <a href="/admin/type/create" class="btn btn-success btn-md">
+            <a href="{{ url()->current() }}/create" class="btn btn-success btn-md">
                 <i class="fa fa-plus-circle"></i> 添加
             </a>
         </div>
@@ -35,7 +35,9 @@
                         <thead>
                         <tr>
                             <th data-sortable="false" class="hidden-sm"></th>
-                            <th class="hidden-sm">类型名</th>
+                            <th class="hidden-sm">属性名</th>
+                            <th class="hidden-sm">属性类型</th>
+                            <th class="hidden-sm">属性可选值</th>
                             <th class="hidden-md">创建时间</th>
                             <th data-sortable="false">操作</th>
                         </tr>
@@ -61,11 +63,11 @@
                 <div class="modal-body">
                     <p class="lead">
                         <i class="fa fa-question-circle fa-lg"></i>
-                        确认要删除这个品牌吗?
+                        确认要删除这个吗?
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <form class="deleteForm" method="POST" action="/admin/type">
+                    <form class="deleteForm" method="POST" action="{{ url()->current() }}">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -109,7 +111,7 @@
                             order: [[1, "desc"]],
                             serverSide: true,
                             ajax: {
-                                url: '/admin/type/index',
+                                url: '/admin/attribute/index/{{ $id }}',
                                 type: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -117,15 +119,16 @@
                             },
                             "columns": [
                                 {"data": "id"},
-                                {"data": "type_name"},
+                                {"data": "attr_name"},
+                                {"data": "attr_type"},
+                                {"data": "attr_option_values"},
                                 {"data": "created_at"},
                                 {"data": "action"}
                             ],
                             columnDefs: [
                                 {
                                     'targets': -1, "render": function (data, type, row) {
-                                    var caozuo = '<a style="margin:3px;" href="/admin/attribute/index/' + row['id'] + '" class="X-Small btn-xs text-default "><i class="fa fa-edit"></i> 属性</a>';
-                                    caozuo += '<a style="margin:3px;" href="/admin/type/' + row['id'] + '/edit" class="X-Small btn-xs text-success "><i class="fa fa-edit"></i> 编辑</a>';
+                                    var caozuo = '<a style="margin:3px;" href="{{ url()->current() }}/' + row['id'] + '/edit" class="X-Small btn-xs text-success "><i class="fa fa-edit"></i> 编辑</a>';
                                     caozuo += '<a style="margin:3px;" href="#" attr="' + row['id'] + '" class="delBtn X-Small btn-xs text-danger "><i class="fa fa-times-circle-o"></i> 删除</a>';
                                     return caozuo;
                                 }

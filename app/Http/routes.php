@@ -79,6 +79,13 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     Route::put('admin/type/update', ['as' => 'admin.type.edit', 'uses' => 'TypeController@update']); //修改
     Route::post('admin/type/store', ['as' => 'admin.type.create', 'uses' => 'TypeController@store']); //添加
 
+    //属性管理(类型下的属性)
+    Route::get('admin/attribute/manage', ['as' => 'admin.attribute.manage', 'uses' => 'AttributeController@index']);
+    Route::any('admin/attribute/index/{id}', ['as' => 'admin.attribute.index', 'uses' => 'AttributeController@index']);
+    Route::resource('admin/attribute', 'AttributeController');
+    Route::put('admin/attribute/update', ['as' => 'admin.attribute.edit', 'uses' => 'AttributeController@update']); //修改
+    Route::post('admin/attribute/store', ['as' => 'admin.attribute.create', 'uses' => 'AttributeController@store']); //添加
+
 });
 
 
