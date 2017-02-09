@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 //use App\Http\Requests\AttributeUpdateRequest;
 //use App\Http\Requests\AttributeStoreRequest;
+use App\Http\Requests\AttributeStoreRequest;
+use App\Http\Requests\AttributeUpdateRequest;
 use App\Models\Attribute;
+use App\Models\Type;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -12,7 +15,7 @@ use App\Http\Controllers\Controller;
 class AttributeController extends Controller
 {
     protected $fields = [
-        'attribute_name' => '',
+        'attr_name' => '',
         'attr_type' => '',
         'attr_option_values' => '',
         'type_id' => '',
@@ -56,6 +59,7 @@ class AttributeController extends Controller
         foreach ($this->fields as $field => $default) {
             $data[$field] = old($field, $default);
         }
+        $data['types'] = Type::all();
         return view('admin.attribute.create', $data);
     }
 
@@ -71,7 +75,7 @@ class AttributeController extends Controller
             $info->$field = $request->get($field);
         }
         $info->save();   //保存
-        return redirect('/admin/attribute')->withSuccess('添加成功！');
+        return redirect('/admin/attribute/index/' . $info->id)->withSuccess('添加成功！');
     }
 
     /**
@@ -82,7 +86,7 @@ class AttributeController extends Controller
     public function edit($id)
     {
         $info = Attribute::find((int)$id);
-        if (!$info) return redirect('/admin/attribute')->withErrors("找不到该对象!");
+        if (!$info) return redirect('/admin/attribute/index/' . $id)->withInput()->withErrors("找不到该对象!");
         $permissions = [];
         if ($info->perms) {
             foreach ($info->perms as $v) {
@@ -94,6 +98,7 @@ class AttributeController extends Controller
             $data[$field] = old($field, $info->$field);
         }
         $data['id'] = $id;
+        $data['types'] = Type::all();
         return view('admin.attribute.edit', $data);
     }
 
@@ -113,7 +118,7 @@ class AttributeController extends Controller
         }
         unset($info->perms);
         $info->save();
-        return redirect('/admin/attribute')->withSuccess('修改成功！');
+        return redirect('/admin/attribute/index/' . $id)->withSuccess('修改成功！');
     }
 
     public function show()

@@ -21,11 +21,11 @@
                             @include('admin.partials.errors')
                             @include('admin.partials.success')
 
-                            <form class="form-horizontal" role="form" method="POST" action="/admin/type"
+                            <form class="form-horizontal" role="form" method="POST" action="/admin/attribute/store"
                                   enctype="multipart/form-data">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="cove_image"/>
-                                @include('admin.type._form')
+                                @include('admin.attribute._form')
                                 <div class="form-group">
                                     <div class="col-md-7 col-md-offset-3">
                                         <button type="submit" class="btn btn-primary btn-md">
