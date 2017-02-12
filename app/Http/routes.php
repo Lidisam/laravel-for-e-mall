@@ -86,6 +86,13 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     Route::put('admin/attribute/update', ['as' => 'admin.attribute.edit', 'uses' => 'AttributeController@update']); //修改
     Route::post('admin/attribute/store', ['as' => 'admin.attribute.create', 'uses' => 'AttributeController@store']); //添加
 
+    //商品管理
+    Route::get('admin/good/manage', ['as' => 'admin.good.manage', 'uses' => 'GoodController@index']);
+    Route::post('admin/good/index', ['as' => 'admin.good.index', 'uses' => 'GoodController@index']);
+    Route::resource('admin/good', 'GoodController');
+    Route::put('admin/good/update', ['as' => 'admin.good.edit', 'uses' => 'GoodController@update']); //修改
+    Route::post('admin/good/store', ['as' => 'admin.good.create', 'uses' => 'GoodController@store']); //添加
+
 });
 
 

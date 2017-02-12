@@ -18,7 +18,7 @@ class CreateGoodsTable extends Migration
             $table->smallInteger('cat_id')->unsigned()->comment('类型id');
             $table->smallInteger('brand_id')->unsigned()->comment('品牌id');
             $table->decimal('market_price', 10, 2)->default('0.00')->comment('市场价');
-            $table->decimal('shop_price', 10, 2)->default('0.00')->comment('本店价');
+                $table->decimal('shop_price', 10, 2)->default('0.00')->comment('本店价');
             $table->integer('jifen')->unsigned()->comment('赠送积分');
             $table->integer('jyz')->unsigned()->comment('赠送经验值');
             $table->integer('jifen_price')->unsigned()->comment('如果要用积分兑换，需要的积分；如果不填则不用');
@@ -49,7 +49,7 @@ class CreateGoodsTable extends Migration
             $table->index('is_best');
             $table->index('is_delete');
             $table->index('sort_num');
-            $table->index('promote_start_time');
+            $table->index('promote_start_timephp');
             $table->index('promote_end_time');
             $table->index('addtime');
 
