@@ -167,7 +167,7 @@ return [
         \InfyOm\Generator\InfyOmGeneratorServiceProvider::class,
         \InfyOm\CoreTemplates\CoreTemplatesServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-
+        Stevenyangecho\UEditor\UEditorServiceProvider::class,
     ],
 
     /*

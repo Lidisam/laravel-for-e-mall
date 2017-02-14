@@ -25,7 +25,8 @@
         "laravelcollective/html": "5.2.*",
         "infyomlabs/swagger-generator": "dev-master",
         "jlapp/swaggervel": "dev-master",
-        "doctrine/dbal": "~2.3"
+        "doctrine/dbal": "~2.3",
+        "stevenyangecho/laravel-u-editor": "1.4.*"
     },
     "autoload": {
         "classmap": [

@@ -6,18 +6,20 @@
 </style>
 <ul class="nav nav-tabs">
     <li class="active"><a href="#home" data-toggle="tab">基本信息</a></li>
-    <li><a href="#profile" data-toggle="tab">档案</a></li>
-    <li><a href="#messages" data-toggle="tab">信息</a></li>
-    <li><a href="#settings" data-toggle="tab">设置</a></li>
+    <li><a href="#desc" data-toggle="tab">商品描述</a></li>
+    <li><a href="#messages" data-toggle="tab">会员价格</a></li>
+    <li><a href="#settings" data-toggle="tab">商品属性</a></li>
+    <li><a href="#pics" data-toggle="tab">商品相册</a></li>
 </ul>
 
 
-<div class="tab-content">
+<div class="tab-content" style="margin-top: 5px">
     <div class="tab-pane active" id="home">
         <div class="form-group">
             <label class="col-md-3 control-label">商品名</label>
             <div class="col-md-5">
-                <input type="text" maxlength="45" class="form-control" name="goods_name" value="{{ $goods_name }}" autofocus>
+                <input type="text" maxlength="45" class="form-control" name="goods_name" value="{{ $goods_name }}"
+                       autofocus>
             </div>
         </div>
         <div class="form-group">
@@ -100,7 +102,8 @@
         <div class="form-group">
             <label class="col-md-3 control-label">商品兑换(积分)</label>
             <div class="col-md-5">
-                <input type="text" maxlength="100" class="form-control" placeholder="如果要用积分兑换，需要的积分；如果不填则不用" name="jifen_price"
+                <input type="text" maxlength="100" class="form-control" placeholder="如果要用积分兑换，需要的积分；如果不填则不用"
+                       name="jifen_price"
                        value="{{ $jifen_price }}" onkeyup="this.value=this.value.replace(/[^\.\d]/g,'')">
             </div>
         </div>
@@ -188,13 +191,30 @@
         <div class="form-group">
             <label class="col-md-3 control-label">seo_描述</label>
             <div class="col-md-5">
-                <input type="text" maxlength="250" class="form-control" name="sec_description" value="{{ $sec_description }}">
+                <input type="text" maxlength="250" class="form-control" name="sec_description"
+                       value="{{ $sec_description }}">
             </div>
         </div>
     </div>
-    <div class="tab-pane" id="profile">..d.</div>
+    @include('UEditor::head')
+    <div class="tab-pane" id="desc">
+        <!-- 加载编辑器的容器 -->
+        <script id="container" name="content" type="text/plain"></script>
+        <!-- 实例化编辑器 -->
+        <script type="text/javascript">
+            var ue = UE.getEditor('container',{
+//                serverUrl: "php/controller.php",//服务器请求地址
+                initialFrameHeight:280
+            });
+            ue.ready(function() {
+                ue.execCommand('serverparam', '_token', '{{ csrf_token() }}');
+                //此处为支持laravel5 csrf ,根据实际情况修改,目的就是设置 _token 值.
+            });
+        </script>
+    </div>
     <div class="tab-pane" id="messages">..e.</div>
     <div class="tab-pane" id="settings">..q.</div>
+    <div class="tab-pane" id="pics">..q.</div>
 </div>
 
 
