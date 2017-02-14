@@ -42,9 +42,11 @@ class Controller extends BaseController
      * @param $model
      * @param $request
      * @param $search
+     * @param null $map2
      * @return array
+     * @internal param null $mode
      */
-    public function showList($map, $model, $request, $search)
+    public function showList($map, $model, $request, $search, $map2 = null)
     {
         if ($request->ajax()) {
             $data = array();
@@ -64,12 +66,22 @@ class Controller extends BaseController
                 })->skip($start)->take($length)
                     ->orderBy($columns[$order[0]['column']]['data'], $order[0]['dir'])
                     ->get();
-            } else {
-                $data['recordsFiltered'] = $model::count();
-                $data['data'] = $model::skip($start)->take($length)
-                    ->orderBy($columns[$order[0]['column']]['data'], $order[0]['dir'])
-                    ->get();
-
+            } else {  //载入页面加载信息
+                if($map2 == null) {
+                    $data['recordsFiltered'] = $model::count();
+                    $data['data'] = $model::skip($start)->take($length)
+                        ->orderBy($columns[$order[0]['column']]['data'], $order[0]['dir'])
+                        ->get();
+                }else{
+                    $data['recordsFiltered'] = $model::where(function ($query) use ($map2) {
+                        $this->getConditions($query, $map2);
+                    })->count();
+                    $data['data'] = $model::where(function ($query) use ($map2) {
+                        $this->getConditions($query, $map2);
+                    })->skip($start)->take($length)
+                        ->orderBy($columns[$order[0]['column']]['data'], $order[0]['dir'])
+                        ->get();
+                }
             }
             return $data;
         }

@@ -12,19 +12,7 @@ class WebUploadController extends Controller
 {
     public function index()
     {
-
-        $model = new Categorys();
-        dump($model->all());
-
-
-        $arr = $model->sortOut($model->all()->toArray());
-        $obj = [];
-        foreach ($arr as $key => $value) {
-            $obj[] = (object)$value;
-        }
-        dump($obj);
-        dump($obj['0']->cat_name);
-        dd('---');
+        return view('packages.webUpload.index');
     }
 
     /**

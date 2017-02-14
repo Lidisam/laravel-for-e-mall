@@ -34,14 +34,20 @@ class AttributeController extends Controller
         //搜索条件
         $map = array(
             'attr_name' => '%' . $search['value'] . '%',
-            'attr_id' => array(
+            'type_id' => array(
                 'way' => 'and',
                 'op' => '=',
                 'value' => intval($id),
             )
         );
         //列表数据获取
-        $data = $this->showList($map, $model, $request, $search);
+        $data = $this->showList($map, $model, $request, $search,
+            array(
+            'type_id' => array(
+            'way' => 'and',
+            'op' => '=',
+            'value' => intval($id),
+        )));
         if (count($data))
             return response()->json($data);
         $data['id'] = $id;

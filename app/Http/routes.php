@@ -87,6 +87,8 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     Route::post('admin/attribute/store', ['as' => 'admin.attribute.create', 'uses' => 'AttributeController@store']); //添加
 
     //商品管理
+    Route::get('admin/good/ajaxGetAttr', ['as' => 'admin.good.ajaxGetAttr', 'uses' => 'GoodController@ajaxGetAttr']);//ajax获取类型的属性
+    Route::any('admin/good/webUpload', ['as' => 'admin.good.webUpload', 'uses' => 'GoodController@webUpload']);
     Route::get('admin/good/manage', ['as' => 'admin.good.manage', 'uses' => 'GoodController@index']);
     Route::post('admin/good/index', ['as' => 'admin.good.index', 'uses' => 'GoodController@index']);
     Route::resource('admin/good', 'GoodController');

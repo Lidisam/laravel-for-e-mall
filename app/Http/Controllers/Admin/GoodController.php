@@ -6,9 +6,12 @@ use App\Http\Requests\BrandStoreRequest;
 use App\Http\Requests\BrandUpdateRequest;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
+use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Categorys;
 use App\Models\Good;
+use App\Models\MemberLevel;
+use App\Models\Type;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -85,6 +88,10 @@ class GoodController extends Controller
         $data['catDatas'] = $catModel->changeObj($catModel->sortOut($catModel->all()->toArray()));
         //商品品牌
         $data['brandDatas'] = Brand::all();
+        //会员价格
+        $data['memberLevelDatas'] = MemberLevel::all();
+        //商品类型属性
+        $data['typeDatas'] = Type::all();
 
         return view('admin.good.create', $data);
     }
@@ -168,6 +175,29 @@ class GoodController extends Controller
         }
         return redirect()->back()
             ->withSuccess("删除成功");
+    }
+
+    /**
+     * ajax获取属性根据类型的ID
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function ajaxGetAttr(Request $request)
+    {
+        $typeId = $request->get('type_id');
+        $model = new Attribute();
+        $info = $model::where(array('type_id' => $typeId))->get();
+        return response()->json($info);
+    }
+
+    /**
+     * 本地webUpload上传
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function webUpload(Request $request) {
+        dd($_FILES);
+        return view('admin.good.webUpload');
     }
 
 }
