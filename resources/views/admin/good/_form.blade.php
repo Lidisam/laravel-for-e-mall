@@ -27,15 +27,6 @@
 </div>
 
 
-<script>
-    //添加选项卡-----------------
-    $('a[data-toggle="tab"]').on('shown', function (e) {
-        e.target // 激活的选项卡
-        e.relatedTarget // 上一个选项卡
-    });
-</script>
-
-
 
 
 

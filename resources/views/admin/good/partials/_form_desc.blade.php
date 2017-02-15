@@ -1,10 +1,10 @@
 @include('UEditor::head')
 <div class="tab-pane" id="desc">
     <!-- 加载编辑器的容器 -->
-    <script id="container" name="content" type="text/plain"></script>
+    <script id="ue_container" name="goods_desc" type="text/plain"></script>
     <!-- 实例化编辑器 -->
     <script type="text/javascript">
-        var ue = UE.getEditor('container',{
+        var ue = UE.getEditor('ue_container',{
 //                serverUrl: "php/controller.php",//服务器请求地址
             initialFrameHeight:280
         });

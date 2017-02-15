@@ -31,8 +31,8 @@ class GoodController extends Controller
         'promote_price' => '',
         'promote_start_time' => '',
         'promote_end_time' => '',
-        'logo' => '',
-        'sm_logo' => '',
+        'logo' => '',  //
+        'sm_logo' => '',  //
         'goods_desc' => '',
         'is_hot' => '',
         'is_new' => '',
@@ -42,8 +42,7 @@ class GoodController extends Controller
         'sec_description' => '',
         'type_id' => '',
         'sort_num' => '',
-        'is_delete' => '',
-        'addtime' => '',
+        'addtime' => '',  //*
     ];
 
 
@@ -101,14 +100,43 @@ class GoodController extends Controller
      * @param CategoryStoreRequest|BrandStoreRequest $request
      * @return mixed
      */
-    public function store(CategoryStoreRequest $request)
+    public function store(Request $request)
     {
-        $info = new Categorys();
-        foreach (array_keys($this->fields) as $field) {
-            $info->$field = $request->get($field);
+        $info = new Good();
+        /*****上传文件*****/
+        $fileRes = $this->uploadFile($request, 'good', 'logo');
+        if (!$fileRes['status'])
+            return redirect()->back()->withErrors($fileRes['msg']);
+        else{
+            $thumb_setting = array(
+                'size' => array(
+                    'width' => 150,
+                    'height' => 150
+                ),
+                'quality' => 60,
+                'path' => $fileRes['savePath'] . '/' . $fileRes['path'],
+                'thumb_path' => $fileRes['savePath'] . '/thumb_' . $fileRes['path']
+            );
+            //上传缩略图
+            $thumbRes = $this->makeThumb($thumb_setting);
+            if (!$thumbRes['status'])
+                return redirect()->back()->withErrors($thumbRes['msg']);
         }
-        $info->save();   //保存
-        return redirect('/admin/category')->withSuccess('添加成功！');
+        /**插入前数据处理*/
+        $data = $info->before_insert($request, $this->fields);
+        $request = $data['data'];
+        $this->fields = $data['fields'];
+        /********保存数据*******/
+        foreach (array_keys($this->fields) as $field) {
+            $info->$field = $request[$field];
+        }
+        $info->logo = $fileRes['savePath'] . $fileRes['path'];
+        $info->sm_logo = $fileRes['savePath'] . '/thumb_' . $fileRes['path'];
+        /******插入后及其处理*******/
+        $data = $info->after_insert($request,$info);
+        dd($data);
+//        $info->save();   //保存
+        return redirect('/admin/good')->withSuccess('添加成功！');
     }
 
     /**

@@ -3,6 +3,7 @@
     <div class="col-md-5">
         @if(count($typeDatas))
             <select name="type_id" id="type_selected" class="form-control">
+                <option value="">选择类型</option>
                 @foreach($typeDatas as $key => $typeData)
                     <option value="{{ $typeData->id }}">{{ $typeData->type_name }}</option>
                 @endforeach;
@@ -16,15 +17,7 @@
 
 <script>
     document.getElementsByName('type_id')['0'].onchange = function () {
-        getMes(this, null);
-    };
-    window.onload = function () {
-        getMes(null, "{{ $typeDatas['0']->id }}");
-    };
-    function getMes(obj, $id) {
-        if (!$id)
-            var type_id = $(obj).val();
-        else type_id = $id;
+        var type_id = $(this).val();
         if (type_id != "") {
             //ajax请求数据
             $.ajax({
@@ -32,13 +25,12 @@
                 url: "/admin/good/ajaxGetAttr?type_id=" + type_id,
                 dataType: "json",
                 success: function (data) {
-                    console.log(data);
                     var html = "";
                     $(data).each(function (k, v) {
                         html += "<p style='margin-top: 2px'>";
                         html += v.attr_name + ":";
                         if (v.attr_type == 1)
-                            html += "<a onclick='addnew(obj);' href='javascript:void(0);'>[+]</a>";
+                            html += "<a onclick='addnew(this);' href='javascript:void(0);'>[+]</a>";
                         if (v.attr_option_values == "")
                             html += "<input type='text' name='ga[" + v.id + "][]' />";
                         else {
@@ -60,7 +52,7 @@
         } else {
             $("#goods_type_content").html("");
         }
-    }
+    };
     //克隆
     function addnew(a) {
         var p = $(a).parent();

@@ -3,14 +3,14 @@
         <label class="col-md-3 control-label">商品名</label>
         <div class="col-md-5">
             <input type="text" maxlength="45" class="form-control" name="goods_name" value="{{ $goods_name }}"
-                   autofocus>
+                   autofocus >
         </div>
     </div>
     <div class="form-group">
         <label class="col-md-3 control-label">商品分类</label>
         <div class="col-md-5">
             @if(count($catDatas))
-                <select name="cat_id" id="" class="form-control">
+                <select name="cat_id" class="form-control">
                     @foreach($catDatas as $key => $catData)
                         <option value="{{ $catData->id }}">{{ $catData->cat_name }}</option>
                     @endforeach;
