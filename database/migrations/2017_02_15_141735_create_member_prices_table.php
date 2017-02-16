@@ -13,6 +13,7 @@ class CreateMemberPricesTable extends Migration
     public function up()
     {
         Schema::create('member_prices', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('goods_id')->unsigned();
             $table->integer('level_id')->unsigned();
             $table->decimal('price', 10, 2)->default('0.00')->comment('会员价');

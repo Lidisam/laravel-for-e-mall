@@ -27,14 +27,18 @@ class Controller extends BaseController
             if (is_array($value)) {
                 if ($value['way'] == 'and')
                     $query = $query->where($key, $value['op'], $value['value']);
-                else
+                else if ($value['way'] == 'or') {
                     $query = $query->orWhere($key, $value['op'], $value['value']);
+                } else if ($value['way'] == 'between') {
+                    $query = $query->whereBetween($key, [$value['value']['0'], $value['value']['1']]);
+                }
             } else {
                 $query = $query->where($key, 'like', $value);
             }
         }
         return $query;
     }
+
 
     /**
      * 获取首页的列表数据
@@ -67,12 +71,12 @@ class Controller extends BaseController
                     ->orderBy($columns[$order[0]['column']]['data'], $order[0]['dir'])
                     ->get();
             } else {  //载入页面加载信息
-                if($map2 == null) {
+                if ($map2 == null) {
                     $data['recordsFiltered'] = $model::count();
                     $data['data'] = $model::skip($start)->take($length)
                         ->orderBy($columns[$order[0]['column']]['data'], $order[0]['dir'])
                         ->get();
-                }else{
+                } else {
                     $data['recordsFiltered'] = $model::where(function ($query) use ($map2) {
                         $this->getConditions($query, $map2);
                     })->count();

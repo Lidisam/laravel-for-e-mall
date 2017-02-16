@@ -54,20 +54,19 @@ class GoodController extends Controller
     {
         $model = new Good();
         $search = $request->get('search');
-        //搜索条件
-        $map = array(
-            'goods_name' => '%' . $search['value'] . '%',
-            'is_delete' => array(
-                'way' => 'and',
-                'op' => '=',
-                'value' => '0'
-            )
-        );
+        $searchAll = json_decode($search['value'], true);
+        //组装新的查询条件数据
+        $map = $model->search_map($searchAll);
         //列表数据获取
         $data = $this->showList($map, $model, $request, $search);
         if (count($data))
             return response()->json($data);
-        return view('admin.good.index');
+        //商品分类
+        $catModel = new Categorys();
+        //商品品牌
+        $data['brandDatas'] = Brand::all();
+        $data['catDatas'] = $catModel->changeObj($catModel->sortOut($catModel->all()->toArray()));
+        return view('admin.good.index', $data);
     }
 
 
@@ -103,11 +102,12 @@ class GoodController extends Controller
     public function store(Request $request)
     {
         $info = new Good();
+        $tmp_request = $request;
         /*****上传文件*****/
         $fileRes = $this->uploadFile($request, 'good', 'logo');
         if (!$fileRes['status'])
             return redirect()->back()->withErrors($fileRes['msg']);
-        else{
+        else {
             $thumb_setting = array(
                 'size' => array(
                     'width' => 150,
@@ -133,7 +133,7 @@ class GoodController extends Controller
         $info->logo = $fileRes['savePath'] . $fileRes['path'];
         $info->sm_logo = $fileRes['savePath'] . '/thumb_' . $fileRes['path'];
         /******插入后及其处理*******/
-        $data = $info->after_insert($request,$info);
+        $data = $info->after_insert($request, $info, $tmp_request);
         dd($data);
 //        $info->save();   //保存
         return redirect('/admin/good')->withSuccess('添加成功！');
@@ -223,7 +223,8 @@ class GoodController extends Controller
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function webUpload(Request $request) {
+    public function webUpload(Request $request)
+    {
         dd($_FILES);
         return view('admin.good.webUpload');
     }

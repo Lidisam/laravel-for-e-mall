@@ -7,4 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class GoodsAttr extends Model
 {
     //
+    public $timestamps = false;
 }

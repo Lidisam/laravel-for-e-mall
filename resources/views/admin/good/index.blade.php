@@ -9,9 +9,9 @@
 @section('content')
 
     <div class="row page-title-row" style="margin:5px;">
-        <div class="col-md-6">
-        </div>
-        <div class="col-md-6 text-right">
+        {{--搜索部分--}}
+        @include('admin.good.partials.index_search')
+        <div class="col-md-1 text-right">
             <a href="/admin/good/create" class="btn btn-success btn-md">
                 <i class="fa fa-plus-circle"></i> 添加
             </a>
@@ -81,6 +81,7 @@
             @section('js')
                 <script>
                     $(function () {
+
                         var table = $("#tags-table").DataTable({
                             language: {
                                 "sProcessing": "处理中...",
@@ -131,6 +132,38 @@
                                 }
                             ]
                         });
+                        //TODO：我是小小的额外测试框----我应该将所有的条件搜索框都用class绑定并且keyup监听后获取他们所有值拼成字符串然后发过去解析
+                        //隐藏原有的搜索框
+                        $(".dataTables_filter label input[type=search]").hide();
+                        $(".search_example").on('keyup change', function () {
+                            var val1 = $("[name=goods_name]").val();
+                            var val3 = $("[name=cat_id]").val();
+                            var val4 = $("[name=brand_id]").val();
+                            var val5 = $("[name=is_hot]:checked").val();
+                            var val6 = $("[name=is_new]:checked").val();
+                            var val7 = $("[name=is_best]:checked").val();
+                            var val8 = $("[name=is_on_sale]:checked").val();
+                            var val9 = $("[name=is_delete]:checked").val();
+                            var val11 = $("[name=goods_start_price]").val();
+                            var val12 = $("[name=goods_end_price]").val();
+                            var val13 = $("[name=promote_start_time]").val();
+                            var val14 = $("[name=promote_end_time]").val();
+                            //自带的那个搜索框
+                            table.search(
+                                '{"brand_id":"' + val4 + '",' +
+                                '"is_hot":"' + val5 + '",' +
+                                '"is_new":"' + val6 + '",' +
+                                '"is_best":"' + val7 + '",' +
+                                '"is_on_sale":"' + val8 + '",' +
+                                '"is_delete":"' + val9 + '",' +
+                                '"goods_start_price":"' + val11 + '",' +
+                                '"goods_end_price":"' + val12 + '",' +
+                                '"promote_start_time":"' + val13 + '",' +
+                                '"promote_end_time":"' + val14 + '",' +
+                                '"cat_id": "' + val3 + '",' +
+                                '"goods_name": "' + val1 + '"}'
+                            ).draw();
+                        });
 
                         table.on('preXhr.dt', function () {
                             loadShow();
@@ -153,5 +186,6 @@
                         });
 
                     });
+
                 </script>
 @stop

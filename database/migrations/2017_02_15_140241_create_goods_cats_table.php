@@ -13,6 +13,7 @@ class CreateGoodsCatsTable extends Migration
     public function up()
     {
         Schema::create('goods_cats', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('goods_id')->unsigned();
             $table->integer('cat_id')->unsigned();
             $table->foreign('goods_id')->references('id')->on('goods')->onUpdate('cascade')->onDelete('cascade');
