@@ -10,11 +10,17 @@ use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Categorys;
 use App\Models\Good;
+use App\Models\GoodsPic;
 use App\Models\MemberLevel;
+use App\Models\MemberPrice;
 use App\Models\Type;
+use App\Repositories\PicRepository;
+use DaveJamesMiller\Breadcrumbs\Exception;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use Intervention\Image\Facades\Image;
 
 class GoodController extends Controller
 {
@@ -130,12 +136,10 @@ class GoodController extends Controller
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request[$field];
         }
-        $info->logo = $fileRes['savePath'] . $fileRes['path'];
+        $info->logo = $fileRes['savePath'] . '/' . $fileRes['path'];
         $info->sm_logo = $fileRes['savePath'] . '/thumb_' . $fileRes['path'];
         /******插入后及其处理*******/
         $data = $info->after_insert($request, $info, $tmp_request);
-        dd($data);
-//        $info->save();   //保存
         return redirect('/admin/good')->withSuccess('添加成功！');
     }
 
@@ -146,8 +150,8 @@ class GoodController extends Controller
      */
     public function edit($id)
     {
-        $info = Categorys::find((int)$id);
-        if (!$info) return redirect('/admin/category')->withErrors("找不到该对象!");
+        $info = Good::find((int)$id);
+        if (!$info) return redirect('/admin/good')->withErrors("找不到该对象!");
         $permissions = [];
         if ($info->perms) {
             foreach ($info->perms as $v) {
@@ -159,8 +163,55 @@ class GoodController extends Controller
             $data[$field] = old($field, $info->$field);
         }
         $data['id'] = $id;
-        $data['all'] = Categorys::all()->toArray();
-        return view('admin.category.edit', $data);
+        $data['all'] = Good::all()->toArray();
+        $catModel = new Categorys();
+        //商品分类
+        $data['catDatas'] = $catModel->changeObj($catModel->sortOut($catModel->all()->toArray()));
+        //商品品牌
+        $data['brandDatas'] = Brand::all();
+        //会员价格
+        $data['memberLevelDatas'] = MemberLevel::all();
+        //商品类型属性
+        $data['typeDatas'] = Type::all();
+        //当前拓展分类
+        $data['gcDatas'] = DB::table('goods_cats')
+            ->join('categorys', function ($join) {
+                $join->on('goods_cats.cat_id', '=', 'categorys.id');
+            })->select('categorys.*')
+            ->where(array('goods_id' => $id))
+            ->get();
+        //当前用户的会员价格
+        $data['currentMemberLevelDatas'] = MemberPrice::where(array('goods_id' => $id))
+            ->groupBy("level_id")->get();
+        //取出当前商品的属性数据
+        $gaData = DB::table('goods_attrs')
+            ->join('attributes', function ($join) {
+                $join->on('goods_attrs.attr_id', '=', 'attributes.id');
+            })->select('goods_attrs.*', 'attributes.attr_name', 'attributes.attr_option_values', 'attributes.attr_type')
+            ->where(array('goods_id' => $id))
+            ->get();
+        //取出新添加的属性
+        $attr_id = array();
+        $tempArr = [];
+        foreach ($gaData as $k => $v) {
+            $attr_id[] = $v->attr_id;
+            $tempArr[$k]['id'] = $v->id;
+            $tempArr[$k]['goods_id'] = $v->goods_id;
+            $tempArr[$k]['attr_id'] = $v->attr_id;
+            $tempArr[$k]['attr_value'] = $v->attr_value;
+            $tempArr[$k]['attr_price'] = $v->attr_price;
+            $tempArr[$k]['attr_name'] = $v->attr_name;
+            $tempArr[$k]['attr_option_values'] = $v->attr_option_values;
+            $tempArr[$k]['attr_type'] = $v->attr_type;
+        }
+        $gaData = $tempArr;
+        $attr_id = array_unique($attr_id);
+        $allAttrId = Attribute::where(array('type_id' => $info->type_id))
+            ->whereNotIn('id', $attr_id)->get();
+        $data['gaData'] = array_merge($gaData, $allAttrId->toArray());
+        //商品相册
+        $data['gpDatas'] = GoodsPic::where(array('goods_id' => $id))->get();
+        return view('admin.good.edit', $data);
     }
 
     /**
@@ -170,7 +221,7 @@ class GoodController extends Controller
      * @return mixed
      * @internal param $MemberLevelUpdateRequest
      */
-    public function update(CategoryUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
         $info = Categorys::find((int)$id);
         $logo = $info->logo;
@@ -221,12 +272,41 @@ class GoodController extends Controller
     /**
      * 本地webUpload上传
      * @param Request $request
+     * @param PicRepository $picRepository
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function webUpload(Request $request)
+    public function webUpload(Request $request, PicRepository $picRepository)
     {
-        dd($_FILES);
-        return view('admin.good.webUpload');
+        $res = $picRepository->uploadFileOfImg($_FILES, 'file', 'good_pics', ['size' => [150, 150]]);
+        if ($res['status']) {
+            $model = new GoodsPic();
+            $model->pic = $res['savePath'] . '/' . $res['path'];
+            $model->sm_pic = $res['savePath'] . '/thumb_' . $res['path'];
+            $model->goods_id = intval($request->get('goods_id'));
+            if ($model->save())
+                return response()->json(true);
+            die(1); //TODO：这个返回没效果
+        } else {
+            die(1);  //TODO：这个返回没效果
+        }
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delPic(Request $request)
+    {
+        $pic_id = $request->get('pic_id');
+        $model = GoodsPic::find(intval($pic_id));
+        if ($model->delete()) {
+            unlink($model->pic);
+            unlink($model->sm_pic);
+            return response()->json(['status' => true]);
+        } else {
+            return response()->json(['status' => false]);
+        }
+    }
+
 
 }

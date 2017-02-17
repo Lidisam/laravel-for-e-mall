@@ -35,7 +35,8 @@
                         <thead>
                         <tr>
                             <th data-sortable="false" class="hidden-sm"></th>
-                            <th class="hidden-sm">分类名</th>
+                            <th class="hidden-sm">商品名</th>
+                            <th class="hidden-sm">店内价</th>
                             <th class="hidden-md">创建时间</th>
                             <th data-sortable="false">操作</th>
                         </tr>
@@ -119,6 +120,7 @@
                             "columns": [
                                 {"data": "id"},
                                 {"data": "goods_name"},
+                                {"data": "shop_price"},
                                 {"data": "created_at"},
                                 {"data": "action"}
                             ],
@@ -132,7 +134,6 @@
                                 }
                             ]
                         });
-                        //TODO：我是小小的额外测试框----我应该将所有的条件搜索框都用class绑定并且keyup监听后获取他们所有值拼成字符串然后发过去解析
                         //隐藏原有的搜索框
                         $(".dataTables_filter label input[type=search]").hide();
                         $(".search_example").on('keyup change', function () {
@@ -172,7 +173,6 @@
                         table.on('draw.dt', function () {
                             loadFadeOut();
                         });
-
                         table.on('order.dt search.dt', function () {
                             table.column(0, {search: 'applied', order: 'applied'}).nodes().each(function (cell, i) {
                                 cell.innerHTML = i + 1;

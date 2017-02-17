@@ -88,6 +88,7 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
 
     //商品管理
     Route::get('admin/good/ajaxGetAttr', ['as' => 'admin.good.ajaxGetAttr', 'uses' => 'GoodController@ajaxGetAttr']);//ajax获取类型的属性
+    Route::get('admin/good/delPic', ['as' => 'admin.good.delPic', 'uses' => 'GoodController@delPic']);//编辑时删除图片
     Route::any('admin/good/webUpload', ['as' => 'admin.good.webUpload', 'uses' => 'GoodController@webUpload']);
     Route::get('admin/good/manage', ['as' => 'admin.good.manage', 'uses' => 'GoodController@index']);
     Route::post('admin/good/index', ['as' => 'admin.good.index', 'uses' => 'GoodController@index']);

@@ -3,7 +3,7 @@
         <label class="col-md-3 control-label">商品名</label>
         <div class="col-md-5">
             <input type="text" maxlength="45" class="form-control" name="goods_name" value="{{ $goods_name }}"
-                   autofocus >
+                   autofocus>
         </div>
     </div>
     <div class="form-group">
@@ -20,14 +20,17 @@
             @endif
         </div>
     </div>
+    {{--TODO:未完成删除的按钮位置。。。--}}
     <div class="form-group">
         <label class="col-md-3 control-label">拓展分类</label>
         <label class="control-label no-padding-right"><i></i>
-            <a href="javascript:void(0);" onclick="$('#more_ext_cat').append($('#ext_cat').find('select').clone())">[+]</a>：
+            <a href="javascript:void(0);"
+               onclick="$('#more_ext_cat').append($('#ext_cat').find('select').clone())">[+]</a>：
         </label>
         <div class="col-md-5" id="ext_cat">
             @if(count($catDatas))
                 <select name="ext_cat_id[]" class="form-control">
+                    <option value="">选项如下</option>
                     @foreach($catDatas as $key => $catData)
                         <option value="{{ $catData->id }}">{{ $catData->cat_name }}</option>
                     @endforeach;
@@ -38,7 +41,19 @@
         </div>
         <div class="col-md-12 text-right" style="padding: 0;">
             <div class="col-md-3">&nbsp;</div>
-            <div class="col-md-5" id="more_ext_cat"></div>
+            <div class="col-md-5" id="more_ext_cat">
+                <select name="ext_cat_id[]" class="form-control">
+                    @foreach($gcDatas as $key => $gcData)
+                        @foreach($catDatas as $key => $catData)
+                            <div class="col-md-4">
+                                <option value="{{ $catData->id }}"
+                                        @if($gcData->id == $catData->id) selected @endif>{{ $catData->cat_name }}</option>
+                            </div>
+                            <div class="col-md-4"></div>
+                        @endforeach;
+                    @endforeach;
+                </select>
+            </div>
         </div>
     </div>
     <div class="form-group">
@@ -93,7 +108,8 @@
     </div>
     <div class="form-group">
         <label class="col-md-3 checkbox control-label">
-            <input type="checkbox" name="is_promote" onclick="toggleCheckbox(this)" value="1">促销价
+            <input type="checkbox" name="is_promote" onclick="toggleCheckbox(this)"
+                   value="1" @if($is_promote == 1) checked @endif>促销价
         </label>
         <div class="col-md-5">
             <input type="text" class="form-control" name="promote_price" id="promote_price"
@@ -118,10 +134,13 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-md-3 control-label">logo原图</label>
+        <label class="col-md-3 control-label">logo原图{{ public_path('Uploads') }}</label>
         <div class="col-md-5">
-            <input type="file" class="form-control" name="logo" value="{{ $logo }}">
+            <input type="file" class="form-control" name="logo" value="/{{ $logo }}">
         </div>
+        <div class="col-md-5 text-right">
+            <img style="box-shadow: 0 2px 3px rgba(0,0,0,0.15);" src="/{{ $sm_logo }}" alt="{{ $goods_name }}"></div>
+
     </div>
     <div class="form-group">
         <label class="col-md-3 control-label">特品选项</label>
@@ -183,6 +202,11 @@
 
 <script>
     //是否促销的-----------------
+    //初始化时判断是否促销
+    window.onload = function () {
+        toggleCheckbox($("[name=is_promote]"));
+    };
+
     function toggleCheckbox(obj) {
         if ($(obj).is(':checked')) {
             $('[name=promote_price]').removeAttr('disabled');

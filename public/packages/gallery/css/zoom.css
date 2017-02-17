@@ -11,11 +11,11 @@
 	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
 }
 .gallery-style {
-	float:left;border:none;border-right: 1px solid #ccc;margin-bottom: 10px;margin-right: 10px;
+	float:left;border:none;border-right: 1px solid #ccc;margin-bottom: 8px;margin-right: 5px;
 }
 .gallery-style a img{
-	height:120px;
-	width: 120px;
+	height:100px;
+	width: 100px;
 	box-shadow: 0 2px 3px rgba(0,0,0,0.15);
 }
 #zoom .content {

@@ -9,6 +9,8 @@
 namespace App\Repositories;
 
 
+use Intervention\Image\Facades\Image;
+
 class PicRepository
 {
     /**
@@ -48,6 +50,31 @@ class PicRepository
             } else {
                 return $this->msgStyle(false, '文件上传出错');
             }
+        }
+        return $this->msgStyle(false, '上传文件不存在');
+    }
+
+    /**
+     * img插件的图片上传方法
+     * @param $file [$_FILE]
+     * @param $temp_file_name [$_FILE中文件名]
+     * @param $prex_path [存储前缀路径]
+     * @param null $mode [null代表无缩略图]
+     * @return array
+     * @internal param $file_name [$_FILE中文件名]
+     */
+    public function uploadFileOfImg($file, $temp_file_name, $prex_path, $mode = null)
+    {
+        if (count($file[$temp_file_name])) {
+            $destPath = 'Uploads/' . $prex_path . '/';
+            $savePath = $destPath . '' . date('Y-m-d', time());
+            is_dir($savePath) || mkdir($savePath);  //如果不存在则创建目录
+            $file_name = md5(time() . $_FILES[$temp_file_name]['tmp_name']) . '.' . pathinfo($_FILES[$temp_file_name]['name'], PATHINFO_EXTENSION);
+            $img = Image::make($_FILES[$temp_file_name]['tmp_name'])->save($savePath . '/' . $file_name);
+            if ($mode)
+                $thumb_img = Image::make($_FILES[$temp_file_name]['tmp_name'])->resize($mode['size']['0'], $mode['size']['1'])->save($savePath . '/thumb_' . $file_name);
+            if ($img || (isset($thumb_img) && $thumb_img && $img))
+                return $this->msgStyle(true, '文件上传成功', $savePath, $file_name);
         }
         return $this->msgStyle(false, '上传文件不存在');
     }

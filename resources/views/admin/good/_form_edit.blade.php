@@ -15,23 +15,13 @@
 
 <div class="tab-content" style="margin-top: 5px">
     {{--商品基本描述--}}
-    @include('admin.good.partials.create._form_base')
+    @include('admin.good.partials.edit._form_base')
     {{--商品描述--}}
-    @include('admin.good.partials.create._form_desc')
+    @include('admin.good.partials.edit._form_desc')
     {{--会员价格--}}
-    @include('admin.good.partials.create._form_ml')
+    @include('admin.good.partials.edit._form_ml')
     {{--商品属性--}}
-    @include('admin.good.partials.create._form_set')
+    @include('admin.good.partials.edit._form_set')
     {{--商品相册--}}
-    @include('admin.good.partials.create._form_pic')
+    @include('admin.good.partials.edit._form_pic')
 </div>
-
-
-
-
-
-
-
-
-
-

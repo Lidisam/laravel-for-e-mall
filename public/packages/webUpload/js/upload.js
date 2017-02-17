@@ -241,6 +241,19 @@
                     if (isSupportBase64) {
                         img = $('<img src="' + src + '">');
                         $wrap.empty().append(img);
+                        // $("#img_show").append('' +
+                        //     '<div class="gallery">' +
+                        //     '<div class="gallery-style">' +
+                        //     '<div>' +
+                        //     '<a href="/packages/gallery/img/gallery/DSC_0008-660x441.jpg">' +
+                        //     '<img src="'+src+'"/>' +
+                        //     '</a>' +
+                        //     '<div>' +
+                        //     '<button class="btn-sm btn-warning form-control">删除</button> ' +
+                        //     '</div> ' +
+                        //     '</div>' +
+                        //     '</div>' +
+                        //     '</div>');
                     } else {
                         $.ajax('../../server/preview.php', {
                             method: 'POST',

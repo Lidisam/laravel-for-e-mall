@@ -14,7 +14,7 @@
                 <div class="">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3 class="panel-title">编辑用户(修改密码则填写密码)</h3>
+                            <h3 class="panel-title">编辑商品--{{ $goods_name }}</h3>
                         </div>
                         <div class="panel-body">
 
@@ -25,10 +25,10 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="_method" value="PUT">
                                 <input type="hidden" name="id" value="{{ $id }}">
-                                @include('admin.good._form')
+                                @include('admin.good._form_edit')
                                 <div class="form-group">
-                                    <div class="col-md-7 col-md-offset-3">
-                                        <button type="submit" class="btn btn-primary btn-md">
+                                    <div class="col-md-12 text-right" style="margin-top: 10px">
+                                        <button type="submit" style="width: 100%" class="btn btn-primary btn-md">
                                             <i class="fa fa-plus-circle"></i>
                                             保存
                                         </button>
