@@ -122,7 +122,7 @@
         <div class="col-md-5">
             <input type="text" class="form-control laydate-icon-molv skindemo" name="promote_start_time"
                    onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" disabled="disabled"
-                   value="{{ $promote_start_time }}" style="height: 34px">
+                   value="<?=date("Y-m-d H:i:s",$promote_start_time);?>" style="height: 34px">
         </div>
     </div>
     <div class="form-group">
@@ -130,7 +130,7 @@
         <div class="col-md-5">
             <input type="text" class="form-control laydate-icon-molv skindemo" name="promote_end_time"
                    onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" disabled="disabled"
-                   value="{{ $promote_end_time }}" style="height: 34px">
+                   value="<?=date("Y-m-d H:i:s",$promote_end_time);?>" style="height: 34px">
         </div>
     </div>
     <div class="form-group">
@@ -139,8 +139,10 @@
             <input type="file" class="form-control" name="logo" value="/{{ $logo }}">
         </div>
         <div class="col-md-5 text-right">
-            <img style="box-shadow: 0 2px 3px rgba(0,0,0,0.15);" src="/{{ $sm_logo }}" alt="{{ $goods_name }}"></div>
-
+            @if($sm_logo != "")
+                <img style="box-shadow: 0 2px 3px rgba(0,0,0,0.15);" src="/{{ $sm_logo }}" alt="{{ $goods_name }}">
+            @endif
+        </div>
     </div>
     <div class="form-group">
         <label class="col-md-3 control-label">特品选项</label>

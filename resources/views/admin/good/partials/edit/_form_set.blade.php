@@ -19,6 +19,7 @@
             <div>
                 {{ $v['attr_name'] }}:
                 @if($v['attr_type'] == 1)
+                    <?php $opt = null;?>
                     @if(isset($v['attr_id']))
                         @if(in_array($v['attr_id'],$attrId))
                             <?php $opt = '[-]';?>

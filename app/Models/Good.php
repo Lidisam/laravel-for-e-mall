@@ -9,6 +9,65 @@ use Intervention\Image\Facades\Image;
 
 class Good extends Model
 {
+    /**
+     * 取出商品的编辑数据
+     * @param $data
+     * @param $id
+     * @param $info
+     */
+    public static function data_of_edit($data, $id, $info)
+    {
+        $data['id'] = $id;
+        $data['all'] = Good::all()->toArray();
+        $catModel = new Categorys();
+        //商品分类
+        $data['catDatas'] = $catModel->changeObj($catModel->sortOut($catModel->all()->toArray()));
+        //商品品牌
+        $data['brandDatas'] = Brand::all();
+        //会员价格
+        $data['memberLevelDatas'] = MemberLevel::all();
+        //商品类型属性
+        $data['typeDatas'] = Type::all();
+        //当前拓展分类
+        $data['gcDatas'] = DB::table('goods_cats')
+            ->join('categorys', function ($join) {
+                $join->on('goods_cats.cat_id', '=', 'categorys.id');
+            })->select('categorys.*')
+            ->where(array('goods_id' => $id))
+            ->get();
+        //当前用户的会员价格
+        $data['currentMemberLevelDatas'] = MemberPrice::where(array('goods_id' => $id))
+            ->groupBy("level_id")->get();
+        //取出当前商品的属性数据
+        $gaData = DB::table('goods_attrs')
+            ->join('attributes', function ($join) {
+                $join->on('goods_attrs.attr_id', '=', 'attributes.id');
+            })->select('goods_attrs.*', 'attributes.attr_name', 'attributes.attr_option_values', 'attributes.attr_type')
+            ->where(array('goods_id' => $id))
+            ->get();
+        //取出新添加的属性
+        $attr_id = array();
+        $tempArr = [];
+        foreach ($gaData as $k => $v) {
+            $attr_id[] = $v->attr_id;
+            $tempArr[$k]['id'] = $v->id;
+            $tempArr[$k]['goods_id'] = $v->goods_id;
+            $tempArr[$k]['attr_id'] = $v->attr_id;
+            $tempArr[$k]['attr_value'] = $v->attr_value;
+            $tempArr[$k]['attr_price'] = $v->attr_price;
+            $tempArr[$k]['attr_name'] = $v->attr_name;
+            $tempArr[$k]['attr_option_values'] = $v->attr_option_values;
+            $tempArr[$k]['attr_type'] = $v->attr_type;
+        }
+        $gaData = $tempArr;
+        $attr_id = array_unique($attr_id);
+        $allAttrId = Attribute::where(array('type_id' => $info->type_id))
+            ->whereNotIn('id', $attr_id)->get();
+        $data['gaData'] = array_merge($gaData, $allAttrId->toArray());
+        //商品相册
+        $data['gpDatas'] = GoodsPic::where(array('goods_id' => $id))->get();
+        return $data;
+    }
 
     /**
      * 首页搜索条件组装
@@ -233,5 +292,83 @@ class Good extends Model
         }
         DB::commit();
         return [true];
+    }
+
+
+    /**
+     * 在商品插入前操作
+     * @param $request
+     * @param null $fields
+     * @return array
+     * @internal param $fields
+     * @internal param $field
+     */
+    public function before_update($request, $fields = null)
+    {
+        //将时间转化为时间戳
+        $data = $request->all();
+        //如果促销价选中
+        if (isset($data['is_promote'])) {
+            $data['promote_start_time'] = strtotime($data['promote_start_time']);
+            $data['promote_end_time'] = strtotime($data['promote_end_time']);
+        }
+        unset($fields['logo']);
+        unset($fields['sm_logo']);
+        unset($fields['addtime']);
+        return array(
+            'data' => $data,
+            'fields' => $fields
+        );
+    }
+
+    /**
+     * @param $request
+     * @param $id
+     * @param $model
+     * @param PicRepository $picRepository
+     * @return array
+     */
+    public function after_update($request, $id, $model, PicRepository $picRepository)
+    {
+        $data = $request->toArray();
+        /***事务操作********************************/
+        DB::beginTransaction();
+        $goods_id = $id;
+        $correct = true;
+        /***处理商品扩展分类***/
+        $correct = GoodsCat::where(['goods_id'=>$goods_id])->delete();  //先删除原来的
+        if (isset($data["ext_cat_id"])) {
+            $eci = $data["ext_cat_id"];
+            foreach ($eci as $v) {
+                //判断插入出错
+                if (!$correct) {
+                    $correct = false;
+                    break;
+                }
+                //如果分类为空则跳过
+                $gcModel = new GoodsCat();
+                if (empty($v)) continue;
+                $gcModel->goods_id = $goods_id;
+                $gcModel->cat_id = $v;
+                $correct = $gcModel->save();
+            }
+        }
+        /**处理商品图片**/
+        if(strlen($_FILES['logo']['name'])){
+            $picRes = $picRepository->uploadFileOfImg($_FILES, 'logo', 'good', ['size'=>[150,150]]);
+            if (is_file($model->logo)){
+                @unlink($model->logo);
+                @unlink($model->sm_logo);
+            }
+        } else $picRes = [];
+
+        if (!$correct) {
+            DB::rollback();
+            return [];
+        }
+        DB::commit();
+        return [
+            'picRes' => $picRes
+        ];
     }
 }

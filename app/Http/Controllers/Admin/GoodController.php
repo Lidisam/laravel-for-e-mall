@@ -102,7 +102,7 @@ class GoodController extends Controller
 
     /**
      * 添加保存函数
-     * @param CategoryStoreRequest|BrandStoreRequest $request
+     * @param BrandStoreRequest|CategoryStoreRequest|Request $request
      * @return mixed
      */
     public function store(Request $request)
@@ -150,6 +150,7 @@ class GoodController extends Controller
      */
     public function edit($id)
     {
+        $data = [];
         $info = Good::find((int)$id);
         if (!$info) return redirect('/admin/good')->withErrors("找不到该对象!");
         $permissions = [];
@@ -162,75 +163,38 @@ class GoodController extends Controller
         foreach (array_keys($this->fields) as $field) {
             $data[$field] = old($field, $info->$field);
         }
-        $data['id'] = $id;
-        $data['all'] = Good::all()->toArray();
-        $catModel = new Categorys();
-        //商品分类
-        $data['catDatas'] = $catModel->changeObj($catModel->sortOut($catModel->all()->toArray()));
-        //商品品牌
-        $data['brandDatas'] = Brand::all();
-        //会员价格
-        $data['memberLevelDatas'] = MemberLevel::all();
-        //商品类型属性
-        $data['typeDatas'] = Type::all();
-        //当前拓展分类
-        $data['gcDatas'] = DB::table('goods_cats')
-            ->join('categorys', function ($join) {
-                $join->on('goods_cats.cat_id', '=', 'categorys.id');
-            })->select('categorys.*')
-            ->where(array('goods_id' => $id))
-            ->get();
-        //当前用户的会员价格
-        $data['currentMemberLevelDatas'] = MemberPrice::where(array('goods_id' => $id))
-            ->groupBy("level_id")->get();
-        //取出当前商品的属性数据
-        $gaData = DB::table('goods_attrs')
-            ->join('attributes', function ($join) {
-                $join->on('goods_attrs.attr_id', '=', 'attributes.id');
-            })->select('goods_attrs.*', 'attributes.attr_name', 'attributes.attr_option_values', 'attributes.attr_type')
-            ->where(array('goods_id' => $id))
-            ->get();
-        //取出新添加的属性
-        $attr_id = array();
-        $tempArr = [];
-        foreach ($gaData as $k => $v) {
-            $attr_id[] = $v->attr_id;
-            $tempArr[$k]['id'] = $v->id;
-            $tempArr[$k]['goods_id'] = $v->goods_id;
-            $tempArr[$k]['attr_id'] = $v->attr_id;
-            $tempArr[$k]['attr_value'] = $v->attr_value;
-            $tempArr[$k]['attr_price'] = $v->attr_price;
-            $tempArr[$k]['attr_name'] = $v->attr_name;
-            $tempArr[$k]['attr_option_values'] = $v->attr_option_values;
-            $tempArr[$k]['attr_type'] = $v->attr_type;
-        }
-        $gaData = $tempArr;
-        $attr_id = array_unique($attr_id);
-        $allAttrId = Attribute::where(array('type_id' => $info->type_id))
-            ->whereNotIn('id', $attr_id)->get();
-        $data['gaData'] = array_merge($gaData, $allAttrId->toArray());
-        //商品相册
-        $data['gpDatas'] = GoodsPic::where(array('goods_id' => $id))->get();
+        /**获取商品关联数据**/
+        $data = Good::data_of_edit($data, $id, $info);
+
         return view('admin.good.edit', $data);
     }
 
     /**
      * 修改操作页
-     * @param CategoryUpdateRequest $request
+     * @param CategoryUpdateRequest|Request $request
      * @param $id
+     * @param PicRepository $picRepository
      * @return mixed
      * @internal param $MemberLevelUpdateRequest
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, PicRepository $picRepository)
     {
-        $info = Categorys::find((int)$id);
-        $logo = $info->logo;
+        $info = Good::find((int)$id);
+        $model = new Good();
+        $res = $model->before_update($request, $this->fields);
+        $data = $res['data'];
+        $this->fields = $res['fields'];
         foreach (array_keys($this->fields) as $field) {
-            $info->$field = $request->get($field);
+            $info->$field = $data[$field];
         }
         unset($info->perms);
+        $result = $model->after_update($request, $id, $info, $picRepository);
+        if (count($result['picRes'])){   //图片处理
+            $info->logo = $result['picRes']['savePath'] . '/' . $result['picRes']['path'];
+            $info->sm_logo = $result['picRes']['savePath'] . '/thumb_' . $result['picRes']['path'];
+        }
         $info->save();
-        return redirect('/admin/category')->withSuccess('修改成功！');
+        return redirect('/admin/good')->withSuccess('修改成功！');
     }
 
     public function show()
