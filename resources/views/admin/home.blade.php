@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+    {{--<link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">--}}
     <style>
         .page-content {
             height: 100%;

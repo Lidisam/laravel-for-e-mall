@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Repositories\PicRepository;
+use DaveJamesMiller\Breadcrumbs\Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
@@ -332,43 +333,90 @@ class Good extends Model
     {
         $data = $request->toArray();
         /***事务操作********************************/
-        DB::beginTransaction();
-        $goods_id = $id;
-        $correct = true;
-        /***处理商品扩展分类***/
-        $correct = GoodsCat::where(['goods_id'=>$goods_id])->delete();  //先删除原来的
-        if (isset($data["ext_cat_id"])) {
-            $eci = $data["ext_cat_id"];
-            foreach ($eci as $v) {
-                //判断插入出错
-                if (!$correct) {
-                    $correct = false;
-                    break;
+        try {
+            DB::beginTransaction();
+            $goods_id = $id;
+            $correct = true;
+            /***处理商品扩展分类***/
+            $correct = GoodsCat::where(['goods_id' => $goods_id])->delete();  //先删除原来的
+            if (isset($data["ext_cat_id"])) {
+                $eci = $data["ext_cat_id"];
+                foreach ($eci as $v) {
+                    //判断插入出错
+                    if (!$correct) {
+                        $correct = false;
+                        break;
+                    }
+                    //如果分类为空则跳过
+                    $gcModel = new GoodsCat();
+                    if (empty($v)) continue;
+                    $gcModel->goods_id = $goods_id;
+                    $gcModel->cat_id = $v;
+                    $correct = $gcModel->save();
                 }
-                //如果分类为空则跳过
-                $gcModel = new GoodsCat();
-                if (empty($v)) continue;
-                $gcModel->goods_id = $goods_id;
-                $gcModel->cat_id = $v;
-                $correct = $gcModel->save();
             }
-        }
-        /**处理商品图片**/
-        if(strlen($_FILES['logo']['name'])){
-            $picRes = $picRepository->uploadFileOfImg($_FILES, 'logo', 'good', ['size'=>[150,150]]);
-            if (is_file($model->logo)){
-                @unlink($model->logo);
-                @unlink($model->sm_logo);
+            /**处理商品图片**/
+            if (strlen($_FILES['logo']['name'])) {
+                $picRes = $picRepository->uploadFileOfImg($_FILES, 'logo', 'good', ['size' => [150, 150]]);
+                if (is_file($model->logo)) {
+                    @unlink($model->logo);
+                    @unlink($model->sm_logo);
+                }
+            } else $picRes = [];
+            /************处理会员价格***********/
+            $correct = MemberPrice::where(['goods_id' => $goods_id])->delete();  //先删除原来的
+            if (isset($request['mp'])) {
+                $mp = $request['mp'];
+                if ($mp) {
+                    foreach ($mp as $k => $v) {
+                        $mpModel = new MemberPrice();
+                        if (empty($v)) continue;
+                        $mpModel->goods_id = $goods_id;
+                        $mpModel->level_id = $k;
+                        $mpModel->price = $v;
+                        if (!$correct) {
+                            $correct = false;
+                            break;
+                        }
+                        $mpModel->save();
+                    }
+                }
             }
-        } else $picRes = [];
+            /*********处理商品属性的数据********/
+            GoodsAttr::where(['goods_id' => $goods_id])->delete();  //先删除原来的
+            if (isset($request['ga'])) {
+                $ga = $request['ga'];
+                $ap = $request['attr_price'];
+                if ($ga) {
+                    foreach ($ga as $k => $v) {
+                        foreach ($v as $k1 => $v1) {
+                            $gaModel = new GoodsAttr();
+                            if (empty($v1)) continue;
+                            $gaModel->goods_id = $goods_id;
+                            $gaModel->attr_id = $k;
+                            $gaModel->attr_value = $v1;
+                            $gaModel->attr_price = $ap[$k][$k1];
+                            if (!$correct) {
+                                $correct = false;
+                                break;
+                            }
+                            $correct = $gaModel->save();
+                        }
+                    }
+                }
+            }
 
-        if (!$correct) {
+            if (!$correct) {
+                DB::rollback();
+                return [];
+            }
+            DB::commit();
+            return [
+                'picRes' => $picRes
+            ];
+        } catch (Exception $e) {
             DB::rollback();
             return [];
         }
-        DB::commit();
-        return [
-            'picRes' => $picRes
-        ];
     }
 }

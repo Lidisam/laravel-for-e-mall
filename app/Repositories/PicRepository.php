@@ -60,21 +60,33 @@ class PicRepository
      * @param $temp_file_name [$_FILE中文件名]
      * @param $prex_path [存储前缀路径]
      * @param null $mode [null代表无缩略图]
+     * @param null $fileExt
      * @return array
      * @internal param $file_name [$_FILE中文件名]
      */
-    public function uploadFileOfImg($file, $temp_file_name, $prex_path, $mode = null)
+    public function uploadFileOfImg($file, $temp_file_name, $prex_path, $mode = null, $fileExt = null)
     {
         if (count($file[$temp_file_name])) {
             $destPath = 'Uploads/' . $prex_path . '/';
             $savePath = $destPath . '' . date('Y-m-d', time());
-            is_dir($savePath) || mkdir($savePath);  //如果不存在则创建目录
-            $file_name = md5(time() . $_FILES[$temp_file_name]['tmp_name']) . '.' . pathinfo($_FILES[$temp_file_name]['name'], PATHINFO_EXTENSION);
-            $img = Image::make($_FILES[$temp_file_name]['tmp_name'])->save($savePath . '/' . $file_name);
-            if ($mode)
-                $thumb_img = Image::make($_FILES[$temp_file_name]['tmp_name'])->resize($mode['size']['0'], $mode['size']['1'])->save($savePath . '/thumb_' . $file_name);
-            if ($img || (isset($thumb_img) && $thumb_img && $img))
-                return $this->msgStyle(true, '文件上传成功', $savePath, $file_name);
+            $ext = pathinfo($_FILES[$temp_file_name]['name'], PATHINFO_EXTENSION);  //文件后缀
+            //文件上传类型
+            if ($fileExt == null)
+                $fileExt = ['jpg', 'png', 'gif', 'bmp', 'jpeg'];
+            $check_ext = in_array($ext, $fileExt, true);
+            //检查上传文件后缀~~
+            if ($check_ext) {
+                is_dir($savePath) || mkdir($savePath);  //如果不存在则创建目录
+                $file_name = md5(time() . $_FILES[$temp_file_name]['tmp_name']) . '.' . $ext;
+                $img = Image::make($_FILES[$temp_file_name]['tmp_name'])->save($savePath . '/' . $file_name);
+                if ($mode)
+                    $thumb_img = Image::make($_FILES[$temp_file_name]['tmp_name'])->resize($mode['size']['0'], $mode['size']['1'])
+                        ->save($savePath . '/thumb_' . $file_name);
+                if ($img || (isset($thumb_img) && $thumb_img && $img))
+                    return $this->msgStyle(true, '文件上传成功', $savePath, $file_name);
+            } else {
+                $this->msgStyle(false, '上传文件类型错误');
+            }
         }
         return $this->msgStyle(false, '上传文件不存在');
     }
@@ -87,7 +99,8 @@ class PicRepository
      * @param $filePath [保存文件名]
      * @return array
      */
-    public function msgStyle($status, $msg, $savePath = null, $filePath = null)
+    public
+    function msgStyle($status, $msg, $savePath = null, $filePath = null)
     {
         return array(
             'status' => $status,
@@ -113,7 +126,8 @@ class PicRepository
      * @param array $data
      * @return array
      */
-    public function makeThumb(array $data)
+    public
+    function makeThumb(array $data)
     {
         $thumb_img = Image::make($data['path'])->resize($data['size']['width'], $data['size']['height']);
         $thumb_img_res = $thumb_img->save($data['thumb_path'], $data['quality']);

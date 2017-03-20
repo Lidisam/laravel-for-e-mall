@@ -181,14 +181,14 @@ class GoodController extends Controller
     {
         $info = Good::find((int)$id);
         $model = new Good();
-        $res = $model->before_update($request, $this->fields);
+        $res = $model->before_update($request, $this->fields);  //插入前数据处理
         $data = $res['data'];
         $this->fields = $res['fields'];
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $data[$field];
         }
         unset($info->perms);
-        $result = $model->after_update($request, $id, $info, $picRepository);
+        $result = $model->after_update($request, $id, $info, $picRepository);  //特殊输入插入处理
         if (count($result['picRes'])){   //图片处理
             $info->logo = $result['picRes']['savePath'] . '/' . $result['picRes']['path'];
             $info->sm_logo = $result['picRes']['savePath'] . '/thumb_' . $result['picRes']['path'];

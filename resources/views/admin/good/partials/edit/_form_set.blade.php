@@ -34,7 +34,7 @@
 
                 @if($v['attr_option_values'])
                     <?php $_arr = explode(',', $v['attr_option_values']);?>
-                    <select>
+                    <select name="ga[{{ $v['attr_id'] }}][]">
                         <option value="">请选择</option>
                         @foreach($_arr as $k1 => $v1)
                             @if(isset($v['attr_value']))
@@ -49,11 +49,11 @@
                     </select>
                 @else
                     @if(isset($v['attr_value']))
-                        <input type="text" value="{{ $v['attr_value'] }}"/>
+                        <input type="text" value="{{ $v['attr_value'] }}" name="attr_price[{{ $v['attr_id'] }}][]"/>
                     @endif
                 @endif
                 @if($v['attr_type'] == 1 && isset($v['attr_price']))
-                    ￥ <input type="text" value="{{ $v['attr_price'] }}"/> 元
+                    ￥ <input type="text" value="{{ $v['attr_price'] }}" name="attr_price[{{ $v['attr_id'] }}][]"/> 元
                 @endif
             </div>
         @endforeach

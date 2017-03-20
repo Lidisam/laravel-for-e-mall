@@ -96,6 +96,13 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     Route::put('admin/good/update', ['as' => 'admin.good.edit', 'uses' => 'GoodController@update']); //修改
     Route::post('admin/good/store', ['as' => 'admin.good.create', 'uses' => 'GoodController@store']); //添加
 
+    //广告管理
+    Route::get('admin/ad/manage', ['as' => 'admin.ad.manage', 'uses' => 'AdController@index']);
+    Route::post('admin/ad/index', ['as' => 'admin.ad.index', 'uses' => 'AdController@index']);
+    Route::resource('admin/ad', 'AdController');
+    Route::put('admin/ad/update', ['as' => 'admin.ad.edit', 'uses' => 'AdController@update']); //修改
+    Route::post('admin/ad/store', ['as' => 'admin.ad.create', 'uses' => 'AdController@store']); //添加
+
 });
 
 
