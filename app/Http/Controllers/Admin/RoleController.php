@@ -58,7 +58,7 @@ class RoleController extends Controller
             }
             return response()->json($data);
         }
-        return view('admin.Role.index');
+        return view('admin.role.index');
     }
 
     /**

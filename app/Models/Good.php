@@ -10,6 +10,17 @@ use Intervention\Image\Facades\Image;
 
 class Good extends Model
 {
+
+    /**
+     * 自定义orm连接
+     * @param $query
+     */
+    public function scopeOnSaled($query)
+    {
+        return $query->where('is_on_sale', 1);
+    }
+
+
     /**
      * 取出商品的编辑数据
      * @param $data
@@ -64,6 +75,15 @@ class Good extends Model
         $attr_id = array_unique($attr_id);
         $allAttrId = Attribute::where(array('type_id' => $info->type_id))
             ->whereNotIn('id', $attr_id)->get();
+//        dump($allAttrId->toArray());
+//        $allAttr = [];
+//        foreach ($allAttrId->toArray() as $k => $v) {
+//            $allAttr[$k]['attr_id'] = -1;
+//            $allAttr[$k]['attr_name'] = '####';
+//            $allAttr[$k]['attr_type'] = '####';
+//            $allAttr[$k]['attr_option_values'] = '####';
+//
+//        }
         $data['gaData'] = array_merge($gaData, $allAttrId->toArray());
         //商品相册
         $data['gpDatas'] = GoodsPic::where(array('goods_id' => $id))->get();

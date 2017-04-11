@@ -15,12 +15,13 @@
     </div>
     <div style="margin-top: 10px" class="col-md-12" id="goods_type_content">
         <?php $attrId = array();?>
+
         @foreach($gaData as $k => $v)
             <div>
                 {{ $v['attr_name'] }}:
                 @if($v['attr_type'] == 1)
                     <?php $opt = null;?>
-                    @if(isset($v['attr_id']))
+                    @if(isset($v['attr_id']) && $v['attr_id'] > 0)
                         @if(in_array($v['attr_id'],$attrId))
                             <?php $opt = '[-]';?>
                         @else

@@ -78,7 +78,7 @@ class AdController extends Controller
             $info->$field = $request->get($field);
         }
         /*****上传文件*****/
-        $fileRes = $this->picRepository->uploadFileOfImg($_FILES, 'ad_logo', 'ad', ['size' => [150, 150]]);
+        $fileRes = $this->picRepository->uploadFileOfImg($_FILES, 'ad_logo', 'ad', ['size' => [352, 150]]);
         if (!$fileRes['status'])
             return redirect()->back()->withErrors($fileRes['msg']);
         /********保存*******/
@@ -131,7 +131,7 @@ class AdController extends Controller
         unset($info->perms);
         /*****上传文件*****/
         if ($request->file('ad_logo')) {   //文件存在
-            $fileRes = $this->picRepository->uploadFileOfImg($_FILES, 'ad_logo', 'ad', ['size' => [150, 150]]);
+            $fileRes = $this->picRepository->uploadFileOfImg($_FILES, 'ad_logo', 'ad', ['size' => [352, 150]]);
             if (!$fileRes['status'])
                 return redirect()->back()->withErrors($fileRes['msg']);
             /********保存*******/

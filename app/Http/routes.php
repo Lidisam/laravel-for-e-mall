@@ -10,9 +10,9 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('/', function () {
-    return view('home');
-});
+//Route::get('/', function () {
+//    return view('home');
+//});
 
 Route::get('/home', function () {
     return view('welcome');
@@ -104,6 +104,20 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     Route::post('admin/ad/store', ['as' => 'admin.ad.create', 'uses' => 'AdController@store']); //添加
 
 });
+
+/**S=前端管理**/
+$router->group(['namespace' => 'Front'], function () {
+    //首页
+    Route::get('/', ['as' => 'front.index.index', 'uses' => 'IndexController@index']);
+
+    //商品
+    Route::get('/product/{product_id}', ['as' => 'front.product.index', 'uses' => 'ProductController@index']);
+
+    //购物车
+    Route::get('/cart/{product_id}', ['as' => 'front.cart.index', 'uses' => 'CartController@index']);
+
+});
+/**E=前端管理**/
 
 
 /*------

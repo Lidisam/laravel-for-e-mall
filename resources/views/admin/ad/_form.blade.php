@@ -38,7 +38,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-md-3 control-label">上传图片</label>
+    <label class="col-md-3 control-label">上传图片(像素:352*150)</label>
     <div class="col-md-5">
         <input type="file" class="form-control" name="ad_logo">
     </div>
@@ -52,10 +52,10 @@
     <label class="col-md-3 control-label">是否开启</label>
     <div class="col-md-9">
         <label class="radio-inline">
-            <input type="radio" value="1" name="is_open">是
+            <input type="radio" value="1" name="is_open" checked>是
         </label>
         <label class="radio-inline">
-            <input type="radio" value="0" name="is_open" checked>否
+            <input type="radio" value="0" name="is_open" @if(isset($is_open) && $is_open == 0) checked @endif>否
         </label>
     </div>
 </div>
