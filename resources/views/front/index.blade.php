@@ -189,6 +189,10 @@
             </ul>
         </dd>
     </dl>
+    <!--floatCart-->
+    <div class="hoverCart">
+        <a href="cart.html">0</a>
+    </div>
     @include('front.layouts.mainFooter')
 @stop
 <!--floatCart-->

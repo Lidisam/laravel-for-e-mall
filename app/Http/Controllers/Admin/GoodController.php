@@ -189,7 +189,7 @@ class GoodController extends Controller
         }
         unset($info->perms);
         $result = $model->after_update($request, $id, $info, $picRepository);  //特殊输入插入处理
-        if (count($result['picRes'])){   //图片处理
+        if (count($result['picRes'])) {   //图片处理
             $info->logo = $result['picRes']['savePath'] . '/' . $result['picRes']['path'];
             $info->sm_logo = $result['picRes']['savePath'] . '/thumb_' . $result['picRes']['path'];
         }

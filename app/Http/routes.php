@@ -106,6 +106,13 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
 });
 
 /**S=前端管理**/
+//用户认证(注册、登录)
+Route::get('/user/login', ['as' => 'front.auth.login', 'uses' => 'Front\AuthController@getLogin']);
+Route::post('/user/login', ['as' => 'front.auth.login', 'uses' => 'Front\AuthController@postLogin']);
+Route::get('/user/register', ['as' => 'front.auth.register', 'uses' => 'Front\AuthController@getRegister']);
+Route::post('/user/register', ['as' => 'front.auth.register', 'uses' => 'Front\AuthController@postRegister']);
+
+
 $router->group(['namespace' => 'Front'], function () {
     //首页
     Route::get('/', ['as' => 'front.index.index', 'uses' => 'IndexController@index']);
@@ -114,7 +121,8 @@ $router->group(['namespace' => 'Front'], function () {
     Route::get('/product/{product_id}', ['as' => 'front.product.index', 'uses' => 'ProductController@index']);
 
     //购物车
-    Route::get('/cart/{product_id}', ['as' => 'front.cart.index', 'uses' => 'CartController@index']);
+    Route::get('/cart', ['as' => 'front.cart.index', 'uses' => 'CartController@index']);
+    Route::get('/cart/logout', ['as' => 'front.cart.logout', 'uses' => 'CartController@logout']);
 
 });
 /**E=前端管理**/

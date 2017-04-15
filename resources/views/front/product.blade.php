@@ -3,14 +3,6 @@
 @section('title','首页')
 
 @section('content')
-    <link rel="apple-touch-icon-precomposed" sizes="57x57"
-          href="/Front/images/icon/apple-touch-icon-57x57-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="120x120"
-          href="/Front/images/icon/apple-touch-icon-120x120-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="196x196"
-          href="/Front/images/icon/apple-touch-icon-196x196-precomposed.png">
-    <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" type="text/css" href="/Front/css/style.css"/>
     <script src="/Front/js/jquery.js"></script>
     <script>
         $(document).ready(function () {

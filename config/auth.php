@@ -46,9 +46,13 @@ return [
             'provider' => 'users',
         ],
 
-        'admin'=>[
+        'admin' => [
             'driver' => 'session',
             'provider' => 'users',
+        ],
+        'client' => [  //用户前端
+            'driver' => 'session',
+            'provider' => 'clients',
         ],
     ],
 
@@ -73,6 +77,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\AdminUser::class,
         ],
+        'clients' => [
+            'driver' => 'eloquent',
+            'model' => App\User::class,
+        ],
 
         // 'users' => [
         //     'driver' => 'database',
@@ -80,7 +88,7 @@ return [
         // ],
     ],
 
-    'model'=> 'App\Models\AdminUser',
+    'model' => 'App\Models\AdminUser',
 
     /*
     |--------------------------------------------------------------------------
