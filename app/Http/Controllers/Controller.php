@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesResources;
+use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 
 class Controller extends BaseController
@@ -176,6 +177,16 @@ class Controller extends BaseController
         } else {
             return $this->msgStyle(true, '', $data['thumb_path']);
         }
+    }
+
+
+    /**
+     * 检查客户端用户权限
+     */
+    public function checkAuth()
+    {
+        if (!Auth::guard('client')->check())
+            return redirect('user/login')->withErrors('请登录');
     }
 
 }

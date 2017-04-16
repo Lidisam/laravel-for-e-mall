@@ -20,13 +20,14 @@
     <link rel="apple-touch-icon-precomposed" sizes="196x196"
           href="/Front/imagesicon/apple-touch-icon-196x196-precomposed.png">
     <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="{{ asset('Front/css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="/Front/css/style.css"/>
     <script src="/Front/js/jquery.js"></script>
     <script src="/packages/layer/layer.js"></script>
 </head>
 <body>
 @yield('content')
-
+<script src="{{ asset('Front/js/bootstrap.min.js') }}"></script>
 
 </body>
 </html>

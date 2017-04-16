@@ -136,6 +136,14 @@ $router->group(['namespace' => 'Front'], function () {
     //下单
     Route::get('/confirmOrder', ['as' => 'front.order.index', 'uses' => 'OrderController@index']);
 
+    //收获地址
+    Route::get('/address', ['as' => 'front.address.index', 'uses' => 'AddressController@index']);
+    Route::get('/address/{address_id}/edit', ['as' => 'front.address.edit', 'uses' => 'AddressController@edit']);
+    Route::post('/address/update', ['as' => 'front.address.update', 'uses' => 'AddressController@update']);
+    Route::get('/address/create', ['as' => 'front.address.create', 'uses' => 'AddressController@create']);
+    Route::post('/address/store', ['as' => 'front.address.store', 'uses' => 'AddressController@store']);
+    Route::post('/address/select', ['as' => 'front.address.select', 'uses' => 'AddressController@select']);
+
 
 });
 /**E=前端管理**/
