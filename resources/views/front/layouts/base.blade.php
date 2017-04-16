@@ -11,6 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
     <meta name="format-detection" content="address=no">
+    <meta name="_token" content="{{ csrf_token() }}"/>
     <link rel="icon" href="/Front/imagesicon/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon-precomposed" sizes="57x57"
           href="/Front/imagesicon/apple-touch-icon-57x57-precomposed.png">

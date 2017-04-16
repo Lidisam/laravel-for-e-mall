@@ -168,6 +168,7 @@ return [
         \InfyOm\CoreTemplates\CoreTemplatesServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Stevenyangecho\UEditor\UEditorServiceProvider::class,
+        Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class
     ],
 
     /*
@@ -222,6 +223,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Flash' => Laracasts\Flash\Flash::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
     ],
 
 ];

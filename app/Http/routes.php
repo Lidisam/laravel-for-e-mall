@@ -103,6 +103,13 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     Route::put('admin/ad/update', ['as' => 'admin.ad.edit', 'uses' => 'AdController@update']); //修改
     Route::post('admin/ad/store', ['as' => 'admin.ad.create', 'uses' => 'AdController@store']); //添加
 
+    //用户管理(即前端客户)
+    Route::get('admin/customer/manage', ['as' => 'admin.customer.manage', 'uses' => 'CustomerController@index']);
+    Route::post('admin/customer/index', ['as' => 'admin.customer.index', 'uses' => 'CustomerController@index']);
+    Route::resource('admin/customer', 'CustomerController');
+    Route::put('admin/customer/update', ['as' => 'admin.customer.edit', 'uses' => 'CustomerController@update']); //修改
+    Route::post('admin/customer/store', ['as' => 'admin.customer.create', 'uses' => 'CustomerController@store']); //添加
+
 });
 
 /**S=前端管理**/
@@ -122,7 +129,13 @@ $router->group(['namespace' => 'Front'], function () {
 
     //购物车
     Route::get('/cart', ['as' => 'front.cart.index', 'uses' => 'CartController@index']);
-    Route::get('/cart/logout', ['as' => 'front.cart.logout', 'uses' => 'CartController@logout']);
+    Route::post('/cart/ajaxAdd', ['as' => 'front.cart.ajaxAdd', 'uses' => 'CartController@ajaxAdd']);
+    Route::post('/cart/ajaxUpdate', ['as' => 'front.cart.ajaxUpdate', 'uses' => 'CartController@ajaxUpdate']);
+    Route::post('/cart/ajaxRemove', ['as' => 'front.cart.ajaxRemove', 'uses' => 'CartController@ajaxRemove']);
+
+    //下单
+    Route::get('/confirmOrder', ['as' => 'front.order.index', 'uses' => 'OrderController@index']);
+
 
 });
 /**E=前端管理**/
