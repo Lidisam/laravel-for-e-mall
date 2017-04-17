@@ -27,11 +27,11 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a><b>Neo</b>CMS</a>
+    {{--<a><b>Neo</b>CMS</a>--}}
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
-    <p class="login-box-msg">万事登录难</p>
+    <p class="login-box-msg">欢迎登陆</p>
 
     <form action="{{ url('/login') }}" method="post">
 		{!! csrf_field() !!}

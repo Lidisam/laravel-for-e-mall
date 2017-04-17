@@ -109,6 +109,8 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     Route::resource('admin/customer', 'CustomerController');
     Route::put('admin/customer/update', ['as' => 'admin.customer.edit', 'uses' => 'CustomerController@update']); //修改
     Route::post('admin/customer/store', ['as' => 'admin.customer.create', 'uses' => 'CustomerController@store']); //添加
+    //用户的收货地址管理
+    Route::get('admin/user_address/{user_id}', ['as' => 'admin.user_address.manage', 'uses' => 'UserAddressController@index']);
 
 });
 
@@ -135,6 +137,8 @@ $router->group(['namespace' => 'Front'], function () {
 
     //下单
     Route::get('/confirmOrder', ['as' => 'front.order.index', 'uses' => 'OrderController@index']);
+    Route::post('/confirm', ['as' => 'front.order.confirm', 'uses' => 'OrderController@confirm']);
+    Route::get('/confirm', ['as' => 'front.order.confirm', 'uses' => 'OrderController@confirmRes']);
 
     //收获地址
     Route::get('/address', ['as' => 'front.address.index', 'uses' => 'AddressController@index']);

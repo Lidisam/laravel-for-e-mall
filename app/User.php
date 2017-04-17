@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Models\MemberLevel;
+use App\Models\Order;
 use App\Models\UserAddress;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -13,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'mobile', 'password',
+        'name', 'mobile', 'password', 'level_id'
     ];
 
     /**
@@ -39,5 +41,15 @@ class User extends Authenticatable
     public function currentUserAddress()
     {
         return $this->userAddresses()->where(['is_selected' => 1])->first();
+    }
+
+    public function level()
+    {
+        return $this->belongsTo(MemberLevel::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'user_id');
     }
 }

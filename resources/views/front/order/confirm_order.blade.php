@@ -3,7 +3,7 @@
 @section('title','首页')
 
 @section('content')
-    <script src="{{ asset('Front/js/order/index.js') }}"></script>
+        <script src="{{ asset('Front/js/order/index.js') }}"></script>
 
     <header>
         <a href="javascript:history.go(-1);" class="iconfont backIcon">&#60;</a>
@@ -24,13 +24,14 @@
     <dl class="payment">
         <dt>选择支付方式</dt>
         <dd>
-            <label><input type="radio" name="pay"/>支付宝支付</label>
-            <label><input type="radio" name="pay"/>微信支付</label>
+            {{--TODO:先默认设置支付方式的id为1，2--}}
+            <label><input type="radio" name="pay" value="1"/>支付宝支付</label>
+            <label><input type="radio" name="pay" value="2"/>微信支付</label>
         </dd>
     </dl>
     <section class="order_msg">
         <h2>我要留言</h2>
-        <textarea placeholder="选填(亲可以在这里添加想说的话)"></textarea>
+        <textarea placeholder="选填(亲可以在这里添加想说的话)" name="user_desc"></textarea>
     </section>
     <!--bottom nav-->
     <div style="height:1rem;"></div>

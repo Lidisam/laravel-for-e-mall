@@ -128,8 +128,9 @@
                             columnDefs: [
                                 {
                                     'targets': -1, "render": function (data, type, row) {
-                                    var caozuo = '<a style="margin:3px;" href="/admin/customer/' + row['id'] + '/edit" class="X-Small btn-xs text-success "><i class="fa fa-edit"></i> 编辑</a>';
-                                    caozuo += '<a style="margin:3px;" href="#" attr="' + row['id'] + '" class="delBtn X-Small btn-xs text-danger "><i class="fa fa-times-circle-o"></i> 删除</a>';
+                                    var caozuo = '<a title="编辑" style="margin:3px;" href="/admin/customer/' + row['id'] + '/edit" class="X-Small btn-xs text-success "><i class="fa fa-edit"></i></a>';
+                                    caozuo += '<a title="收获地址" style="margin:3px;" href="/admin/user_address/' + row['id'] + '" class="X-Small btn-xs text-primary "><i class="fa fa-home"></i></a>';
+                                    caozuo += '<a title="删除" style="margin:3px;" href="#" attr="' + row['id'] + '" class="delBtn X-Small btn-xs text-danger "><i class="fa fa-times-circle-o"></i></a>';
                                     return caozuo;
                                 }
                                 }

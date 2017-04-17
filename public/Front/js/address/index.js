@@ -4,7 +4,7 @@ $(document).ready(function(){
         alert("地址修改成功！");
         location.href="user_set.html";
     });
-    $("[name=select]").click(function () {
+    $("[name=select]").change(function () {
         var addressId = $(this).parent().parent().parent().find("a").attr('about');
         $.ajax({
             type: "POST",

@@ -142,4 +142,5 @@ class CustomerController extends Controller
         return redirect()->back()
             ->withSuccess("删除成功");
     }
+
 }
