@@ -21,9 +21,9 @@
           href="/Front/imagesicon/apple-touch-icon-196x196-precomposed.png">
     <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="{{ asset('Front/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="/Front/css/style.css"/>
-    <script src="/Front/js/jquery.js"></script>
-    <script src="/packages/layer/layer.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('Front/css/style.css') }}"/>
+    <script src="{{ asset('Front/js/jquery-3.2.1.js') }}"></script>
+    <script src="{{ asset('packages/layer/layer.js') }}"></script>
 </head>
 <body>
 @yield('content')

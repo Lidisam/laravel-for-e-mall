@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-//use App\Http\Requests\AttributeUpdateRequest;
-//use App\Http\Requests\AttributeStoreRequest;
 use App\Http\Requests\AttributeStoreRequest;
 use App\Http\Requests\AttributeUpdateRequest;
-use App\Models\Attribute;
-use App\Models\Type;
+use App\Repositories\Admin\AttributeRepository;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -20,6 +17,11 @@ class AttributeController extends Controller
         'attr_option_values' => '',
         'type_id' => '',
     ];
+    protected $attr;
+    function __construct(AttributeRepository $attributeRepository)
+    {
+        $this->attr = $attributeRepository;
+    }
 
 
     /**
@@ -29,7 +31,7 @@ class AttributeController extends Controller
      */
     public function index(Request $request, $id)
     {
-        $model = new Attribute();
+        $model = $this->attr->model();
         $search = $request->get('search');
         //搜索条件
         $map = array(
@@ -65,7 +67,7 @@ class AttributeController extends Controller
         foreach ($this->fields as $field => $default) {
             $data[$field] = old($field, $default);
         }
-        $data['types'] = Type::all();
+        $data['types'] = $this->attr->returnAllTypes();
         return view('admin.attribute.create', $data);
     }
 
@@ -76,7 +78,7 @@ class AttributeController extends Controller
      */
     public function store(AttributeStoreRequest $request)
     {
-        $info = new Attribute();
+        $info = $this->attr->model();
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
@@ -91,7 +93,7 @@ class AttributeController extends Controller
      */
     public function edit($id)
     {
-        $info = Attribute::find((int)$id);
+        $info = $this->attr->returnById($id);
         if (!$info) return redirect('/admin/attribute/index/' . $id)->withInput()->withErrors("找不到该对象!");
         $permissions = [];
         if ($info->perms) {
@@ -104,7 +106,7 @@ class AttributeController extends Controller
             $data[$field] = old($field, $info->$field);
         }
         $data['id'] = $id;
-        $data['types'] = Type::all();
+        $data['types'] = $this->attr->returnAllTypes();
         return view('admin.attribute.edit', $data);
     }
 
@@ -117,13 +119,12 @@ class AttributeController extends Controller
      */
     public function update(AttributeUpdateRequest $request, $id)
     {
-        $info = Attribute::find((int)$id);
-        $logo = $info->logo;
+        $info = $this->attr->returnById($id);
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
         unset($info->perms);
-        $info->save();
+        $this->attr->save($info);
         return redirect('/admin/attribute/index/' . $id)->withSuccess('修改成功！');
     }
 
@@ -139,9 +140,9 @@ class AttributeController extends Controller
      */
     public function destroy($id)
     {
-        $info = Attribute::find((int)$id);
+        $info = $this->attr->returnById($id);
         if ($info) {
-            $info->delete();
+            $this->attr->delete($info);
         } else {
             return redirect()->back()
                 ->withErrors("删除失败");

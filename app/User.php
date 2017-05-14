@@ -7,6 +7,9 @@ use App\Models\Order;
 use App\Models\UserAddress;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * @property string password
+ */
 class User extends Authenticatable
 {
     /**

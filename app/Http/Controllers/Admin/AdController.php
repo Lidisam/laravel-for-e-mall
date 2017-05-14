@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-//use App\Http\Requests\AdStoreRequest;
-//use App\Http\Requests\AdUpdateRequest;
 use App\Http\Requests\AdStoreRequest;
 use App\Http\Requests\AdUpdateRequest;
-use App\Models\Ad;
+use App\Repositories\Admin\AdRepository;
 use App\Repositories\PicRepository;
 use Illuminate\Http\Request;
 
@@ -25,11 +23,13 @@ class AdController extends Controller
         'lm_email' => '',
         'lm_num' => '',
     ];
+    protected $ad;
     protected $picRepository;
 
-    public function __construct(PicRepository $picRepository)
+    public function __construct(PicRepository $picRepository, AdRepository $adRepository)
     {
         $this->picRepository = $picRepository;
+        $this->ad = $adRepository;
     }
 
 
@@ -39,7 +39,7 @@ class AdController extends Controller
      */
     public function index(Request $request)
     {
-        $model = new Ad();
+        $model = $this->ad->model();
         $search = $request->get('search');
         //搜索条件
         $map = array(
@@ -62,7 +62,7 @@ class AdController extends Controller
         foreach ($this->fields as $field => $default) {
             $data[$field] = old($field, $default);
         }
-        $data['all'] = Ad::all()->toArray();
+        $data['ad_logo'] = '';
         return view('admin.ad.create', $data);
     }
 
@@ -73,7 +73,7 @@ class AdController extends Controller
      */
     public function store(AdStoreRequest $request)
     {
-        $info = new Ad();
+        $info = $this->ad->model();
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
@@ -82,9 +82,8 @@ class AdController extends Controller
         if (!$fileRes['status'])
             return redirect()->back()->withErrors($fileRes['msg']);
         /********保存*******/
-        $info->ad_logo = $fileRes['savePath'] . '/' . $fileRes['path'];
-        $info->ad_sm_logo = $fileRes['savePath'] . '/thumb_' . $fileRes['path'];
-        $info->save();   //保存
+        $this->ad->storeAd($info,$fileRes);
+
         return redirect('/admin/ad')->withSuccess('添加成功！');
     }
 
@@ -95,7 +94,7 @@ class AdController extends Controller
      */
     public function edit($id)
     {
-        $info = Ad::find((int)$id);
+        $info = $this->ad->returnById($id);
         if (!$info) return redirect('/admin/ad')->withErrors("找不到该对象!");
         $permissions = [];
         if ($info->perms) {
@@ -104,7 +103,7 @@ class AdController extends Controller
             }
         }
         $this->fields['ad_logo'] = null;
-        $this->fields['ad_sm_logo'] = null;
+        $this->fields['sm_ad_logo'] = null;
         $info->perms = $permissions;
         foreach (array_keys($this->fields) as $field) {
             $data[$field] = old($field, $info->$field);
@@ -122,7 +121,7 @@ class AdController extends Controller
      */
     public function update(AdUpdateRequest $request, $id)
     {
-        $info = Ad::find((int)$id);
+        $info = $this->ad->model();
         $logo = $info->ad_logo;
         $sm_logo = $info->ad_sm_logo;
         foreach (array_keys($this->fields) as $field) {
@@ -139,7 +138,7 @@ class AdController extends Controller
             $info->ad_logo = $fileRes['savePath'] . '/' . $fileRes['path'];
             $info->ad_sm_logo = $fileRes['savePath'] . '/thumb_' . $fileRes['path'];
         }
-        $info->save();
+        $this->ad->saveAd($info);
         return redirect('/admin/ad')->withSuccess('修改成功！');
     }
 
@@ -155,9 +154,9 @@ class AdController extends Controller
      */
     public function destroy($id)
     {
-        $info = Ad::find((int)$id);
+        $info = $this->ad->returnById($id);
         if ($info) {
-            $info->delete();
+            $this->ad->deleteById($info);
         } else {
             return redirect()->back()
                 ->withErrors("删除失败");

@@ -1,4 +1,15 @@
 $(document).ready(function () {
+
+    /*** 全选购物车*/
+    $("#checkAll").click(function () {
+        var checkBox = $(".singleCheck");
+        if (!checkBox.attr("checked")) {
+            checkBox.attr("checked", true);
+        } else {
+            checkBox.attr("checked", false);
+        }
+    });
+
     //show or hide:delBtn
     var totalPrice = $("#totalPrice");
     $(".edit").toggle(function () {

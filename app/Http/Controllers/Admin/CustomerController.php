@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\AdStoreRequest;
-use App\User;
+use App\Repositories\Admin\CustomerRepository;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 class CustomerController extends Controller
@@ -18,6 +16,11 @@ class CustomerController extends Controller
         'created_at' => '',
         'updated_at' => '',
     ];
+    protected $customer;
+    function __construct(CustomerRepository $customerRepository)
+    {
+        $this->customer = $customerRepository;
+    }
 
 
     /**
@@ -26,7 +29,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $model = new User();
+        $model = $this->customer->model();
         $search = $request->get('search');
         //搜索条件
         $map = array(
@@ -51,7 +54,6 @@ class CustomerController extends Controller
         foreach ($this->fields as $field => $default) {
             $data[$field] = old($field, $default);
         }
-        $data['all'] = User::all()->toArray();
         return view('admin.customer.create', $data);
     }
 
@@ -62,7 +64,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $info = new User();
+        $info = $this->customer->model();
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
@@ -70,7 +72,7 @@ class CustomerController extends Controller
         unset($info->created_at);
         unset($info->updated_at);
 
-        $info->save();   //保存
+        $this->customer->save($info);   //保存
         return redirect('/admin/customer')->withSuccess('添加成功！');
     }
 
@@ -81,7 +83,7 @@ class CustomerController extends Controller
      */
     public function edit($id)
     {
-        $info = User::find((int)$id);
+        $info = $this->customer->returnById($id);
         if (!$info) return redirect('/admin/customer')->withErrors("找不到该对象!");
         $this->fields['password'] = '';
         $this->fields['password_confirmation'] = '';
@@ -108,7 +110,7 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $info = User::find((int)$id);
+        $info = $this->customer->returnById($id);
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
@@ -116,7 +118,7 @@ class CustomerController extends Controller
         unset($info->created_at);
         unset($info->updated_at);
         unset($info->perms);
-        $info->save();
+        $this->customer->save($info);
         return redirect('/admin/customer')->withSuccess('修改成功！');
     }
 
@@ -132,9 +134,9 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {
-        $info = User::find((int)$id);
+        $info = $this->customer->returnById($id);
         if ($info) {
-            $info->delete();
+            $this->customer->delete($info);
         } else {
             return redirect()->back()
                 ->withErrors("删除失败");

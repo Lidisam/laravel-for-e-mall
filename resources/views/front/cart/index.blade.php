@@ -5,7 +5,6 @@
 @section('content')
     <script src="{{ asset('Front/js/cart/cart.js') }}"></script>
 
-    <!--header-->
     <header>
         <a href="javascript:history.go(-1);" class="iconfont backIcon">&#60;</a>
         <h1>购物车</h1>
@@ -13,12 +12,12 @@
     <div style="height:1rem;"></div>
     <dl class="cart">
         <dt>
-            <label><input type="checkbox"/>全选</label>
+            <label><input type="checkbox" id="checkAll"/>全选</label>
             <a class="edit">编辑</a>
         </dt>
         @foreach($cartDatas as $key => $cartData)
             <dd>
-                <input type="checkbox"/>
+                <input type="checkbox" title="点击勾选" class="singleCheck"/>
                 <a href="{{ route('front.product.index',['product_id' => $cartData->id]) }}" class="goodsPic">
                     <img src="/{{ $cartData->options->img }}"/></a>
                 <div class="goodsInfor">
@@ -42,7 +41,6 @@
             </dd>
         @endforeach
     </dl>
-    <!--bottom nav-->
     <div style="height:1rem;"></div>
     <aside class="btmNav">
         <a>合计：￥<span id="totalPrice">{{ $totalPrice }}</span></a>

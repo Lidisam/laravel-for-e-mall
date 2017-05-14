@@ -7,9 +7,9 @@
     <script src="{{ asset('Front/js/index.js') }}"></script>
     <!--header-->
     <header>
-        <a href="location.html" class="location">西安市</a>
+        {{--<a href="location.html" class="location">西安市</a>--}}
         <h1 class="logoIcon" style="font-size:.85rem;">&#35;</h1>
-        <a href="search.html" class="rt_searchIcon">&#37;</a>
+        <a href="{{ route('front.search.index') }}" class="rt_searchIcon">&#37;</a>
     </header>
     <div style="height:1rem;"></div>
     <!--S=广告slide-->

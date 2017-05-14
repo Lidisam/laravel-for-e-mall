@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Events\permChangeEvent;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
 use App\Http\Requests\PermissionCreateRequest;
 use App\Http\Requests\PermissionUpdateRequest;
 use App\Http\Controllers\Controller;
@@ -25,6 +24,8 @@ class PermissionController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
+     * @param int $cid
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request, $cid = 0)
@@ -87,7 +88,7 @@ class PermissionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param PremissionCreateRequest|Request $request
+     * @param PermissionCreateRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(PermissionCreateRequest $request)
@@ -117,7 +118,7 @@ class PermissionController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function edit($id)
     {
@@ -153,7 +154,7 @@ class PermissionController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {

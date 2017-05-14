@@ -3,6 +3,7 @@
 namespace App\Repositories\Front;
 
 
+use App\Models\Good;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 
@@ -17,10 +18,11 @@ class CartRepository
      */
     public function cartToggleSigle(Request $request, $mode = '', array $options = [])
     {
+        $goods = Good::find((int)$request->get('id'));
         if (!count($options)) {
-            return Cart::add((int)$request->get('id'), $request->get('name'), intval($mode . (1)), $request->get('price'));
+            return Cart::add((int)$request->get('id'), $goods->goods_name, intval($mode . (1)), $goods->shop_price);
         }
-        return Cart::add((int)$request->get('id'), $request->get('name'), intval($mode . (1)), $request->get('price'), $options);
+        return Cart::add((int)$request->get('id'), $goods->goods_name, intval($mode . (1)), $goods->shop_price, $options);
     }
 
     /**

@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use App\Http\Requests\RoleCreateRequest;
 use App\Http\Requests\RoleUpdateRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
@@ -24,6 +22,7 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -118,7 +117,7 @@ class RoleController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function edit($id)
     {
@@ -146,7 +145,7 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param PermissionUpdateRequest|RoleUpdateRequest|Request $request
+     * @param RoleUpdateRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
@@ -167,7 +166,7 @@ class RoleController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {

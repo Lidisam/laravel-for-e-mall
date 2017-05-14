@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\BrandStoreRequest;
-use App\Http\Requests\BrandUpdateRequest;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
-use App\Models\Brand;
-use App\Models\Categorys;
+use App\Repositories\Admin\CategoryRepository;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -18,6 +16,11 @@ class CategoryController extends Controller
         'cat_name' => '',
         'parent_id' => '',
     ];
+    protected $cat;
+    function __construct(CategoryRepository $categoryRepository)
+    {
+        $this->cat = $categoryRepository;
+    }
 
 
     /**
@@ -26,7 +29,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $model = new Categorys();
+        $model = $this->cat->model();
         $search = $request->get('search');
         //搜索条件
         $map = array(
@@ -52,7 +55,7 @@ class CategoryController extends Controller
         foreach ($this->fields as $field => $default) {
             $data[$field] = old($field, $default);
         }
-        $data['all'] = Categorys::all()->toArray();
+        $data['all'] = $this->cat->returnAllCats();
         return view('admin.category.create', $data);
     }
 
@@ -63,11 +66,11 @@ class CategoryController extends Controller
      */
     public function store(CategoryStoreRequest $request)
     {
-        $info = new Categorys();
+        $info = $this->cat->model();
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
-        $info->save();   //保存
+        $this->cat->save($info);   //保存
         return redirect('/admin/category')->withSuccess('添加成功！');
     }
 
@@ -78,7 +81,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $info = Categorys::find((int)$id);
+        $info = $this->cat->returnById($id);
         if (!$info) return redirect('/admin/category')->withErrors("找不到该对象!");
         $permissions = [];
         if ($info->perms) {
@@ -91,7 +94,7 @@ class CategoryController extends Controller
             $data[$field] = old($field, $info->$field);
         }
         $data['id'] = $id;
-        $data['all'] = Categorys::all()->toArray();
+        $data['all'] = $this->cat->returnAllCats();
         return view('admin.category.edit', $data);
     }
 
@@ -104,13 +107,12 @@ class CategoryController extends Controller
      */
     public function update(CategoryUpdateRequest $request, $id)
     {
-        $info = Categorys::find((int)$id);
-        $logo = $info->logo;
+        $info = $this->cat->returnById($id);
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
         unset($info->perms);
-        $info->save();
+        $this->cat->save($info);
         return redirect('/admin/category')->withSuccess('修改成功！');
     }
 
@@ -126,9 +128,9 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $info = Categorys::find((int)$id);
+        $info = $this->cat->returnById($id);
         if ($info) {
-            $info->delete();
+            $this->cat->delete($info);
         } else {
             return redirect()->back()
                 ->withErrors("删除失败");

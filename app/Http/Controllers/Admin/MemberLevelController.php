@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\MemberLevelStoreRequest;
 use App\Http\Requests\MemberLevelUpdateRequest;
 use App\Models\MemberLevel;
+use App\Repositories\Admin\MemberLevelRepository;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -17,6 +18,11 @@ class MemberLevelController extends Controller
         'top_num' => '',
         'rate' => '',
     ];
+    protected $ml;
+    function __construct(MemberLevelRepository $memberLevelRepository)
+    {
+        $this->ml = $memberLevelRepository;
+    }
 
     /**
      * @param Request $request
@@ -24,7 +30,7 @@ class MemberLevelController extends Controller
      */
     public function index(Request $request)
     {
-        $model = new MemberLevel();
+        $model = $this->ml->model();
         $search = $request->get('search');
         //搜索条件
         $map = array(
@@ -47,7 +53,7 @@ class MemberLevelController extends Controller
         foreach ($this->fields as $field => $default) {
             $data[$field] = old($field, $default);
         }
-        $data['all'] = MemberLevel::all()->toArray();
+        $data['all'] = $this->ml->returnAllMl();
         return view('admin.memberLevel.create', $data);
     }
 
@@ -58,11 +64,11 @@ class MemberLevelController extends Controller
      */
     public function store(MemberLevelStoreRequest $request)
     {
-        $info = new MemberLevel();
+        $info = $this->ml->model();
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
-        $info->save();   //保存
+        $this->ml->save($info);
         return redirect('/admin/memberLevel')->withSuccess('添加成功！');
     }
 
@@ -74,7 +80,7 @@ class MemberLevelController extends Controller
     public function edit($id)
     {
 
-        $info = MemberLevel::find((int)$id);
+        $info = $this->ml->returnById($id);
         if (!$info) return redirect('/admin/memberLevel')->withErrors("找不到该对象!");
         $permissions = [];
         if ($info->perms) {
@@ -99,12 +105,12 @@ class MemberLevelController extends Controller
      */
     public function update(MemberLevelUpdateRequest $request, $id)
     {
-        $info = MemberLevel::find((int)$id);
+        $info = $this->ml->returnById($id);
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
         unset($info->perms);
-        $info->save();
+        $this->ml->save($info);
         return redirect('/admin/memberLevel')->withSuccess('修改成功！');
     }
 
@@ -120,9 +126,9 @@ class MemberLevelController extends Controller
      */
     public function destroy($id)
     {
-        $info = MemberLevel::find((int)$id);
+        $info = $this->ml->returnById($id);
         if ($info) {
-            $info->delete();
+            $this->ml->delete($info);
         } else {
             return redirect()->back()
                 ->withErrors("删除失败");

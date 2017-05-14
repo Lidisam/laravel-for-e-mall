@@ -439,4 +439,5 @@ class Good extends Model
             return [];
         }
     }
+
 }

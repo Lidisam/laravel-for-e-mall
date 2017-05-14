@@ -148,6 +148,10 @@ $router->group(['namespace' => 'Front'], function () {
     Route::post('/address/store', ['as' => 'front.address.store', 'uses' => 'AddressController@store']);
     Route::post('/address/select', ['as' => 'front.address.select', 'uses' => 'AddressController@select']);
 
+    //货物搜索
+    Route::get('/search', ['as' => 'front.search.index', 'uses' => 'SearchController@index']);  //搜索页显示
+    Route::post('/search/msg', ['as' => 'front.search.commit', 'uses' => 'SearchController@commit']);  //提交搜索
+
 
 });
 /**E=前端管理**/

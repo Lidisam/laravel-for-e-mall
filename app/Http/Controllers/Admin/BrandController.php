@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\BrandStoreRequest;
 use App\Http\Requests\BrandUpdateRequest;
-use App\Http\Requests\MemberLevelUpdateRequest;
 use App\Models\Brand;
-use App\Models\MemberLevel;
+use App\Repositories\Admin\BrandRepository;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -18,6 +17,11 @@ class BrandController extends Controller
         'site_url' => '',
         'logo' => '',
     ];
+    protected $brand;
+    function __construct(BrandRepository $brandRepository)
+    {
+        $this->brand = $brandRepository;
+    }
 
 
     /**
@@ -26,7 +30,7 @@ class BrandController extends Controller
      */
     public function index(Request $request)
     {
-        $model = new Brand();
+        $model = $this->brand->model();
         $search = $request->get('search');
         //搜索条件
         $map = array(
@@ -49,7 +53,6 @@ class BrandController extends Controller
         foreach ($this->fields as $field => $default) {
             $data[$field] = old($field, $default);
         }
-        $data['all'] = Brand::all()->toArray();
         return view('admin.brand.create', $data);
     }
 
@@ -60,7 +63,7 @@ class BrandController extends Controller
      */
     public function store(BrandStoreRequest $request)
     {
-        $info = new Brand();
+        $info = $this->brand->model();
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
@@ -69,8 +72,7 @@ class BrandController extends Controller
         if (!$fileRes['status'])
             return redirect()->back()->withErrors($fileRes['msg']);
         /********保存*******/
-        $info->logo = $fileRes['savePath'] . $fileRes['path'];
-        $info->save();   //保存
+        $this->brand->store($info, $fileRes);
         return redirect('/admin/brand')->withSuccess('添加成功！');
     }
 
@@ -81,7 +83,7 @@ class BrandController extends Controller
      */
     public function edit($id)
     {
-        $info = Brand::find((int)$id);
+        $info = $this->brand->returnById($id);
         if (!$info) return redirect('/admin/brand')->withErrors("找不到该对象!");
         $permissions = [];
         if ($info->perms) {
@@ -121,7 +123,7 @@ class BrandController extends Controller
             is_file($logo) && unlink($logo);  //判断是否存在且删除
             $info->logo = $fileRes['savePath'] . '/' . $fileRes['path'];
         }
-        $info->save();
+        $this->brand->save($info);
         return redirect('/admin/brand')->withSuccess('修改成功！');
     }
 
@@ -137,9 +139,9 @@ class BrandController extends Controller
      */
     public function destroy($id)
     {
-        $info = Brand::find((int)$id);
+        $info = $this->brand->returnById($id);
         if ($info) {
-            $info->delete();
+            $this->brand->delete($info);
         } else {
             return redirect()->back()
                 ->withErrors("删除失败");

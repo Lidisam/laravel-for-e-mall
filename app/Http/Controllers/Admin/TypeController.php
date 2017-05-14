@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\TypeUpdateRequest;
 use App\Http\Requests\TypeStoreRequest;
 use App\Models\Type;
+use App\Repositories\Admin\TypeRepository;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -14,6 +15,11 @@ class TypeController extends Controller
     protected $fields = [
         'type_name' => '',
     ];
+    protected $type;
+    function __construct(TypeRepository $typeRepository)
+    {
+        $this->type = $typeRepository;
+    }
 
 
     /**
@@ -22,7 +28,7 @@ class TypeController extends Controller
      */
     public function index(Request $request)
     {
-        $model = new Type();
+        $model = $this->type->model();
         $search = $request->get('search');
         //搜索条件
         $map = array(
@@ -56,11 +62,11 @@ class TypeController extends Controller
      */
     public function store(TypeStoreRequest $request)
     {
-        $info = new Type();
+        $info = $this->type->model();
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
-        $info->save();   //保存
+        $this->type->save($info);   //保存
         return redirect('/admin/type')->withSuccess('添加成功！');
     }
 
@@ -71,7 +77,7 @@ class TypeController extends Controller
      */
     public function edit($id)
     {
-        $info = Type::find((int)$id);
+        $info = $this->type->returnById($id);
         if (!$info) return redirect('/admin/type')->withErrors("找不到该对象!");
         $permissions = [];
         if ($info->perms) {
@@ -96,13 +102,12 @@ class TypeController extends Controller
      */
     public function update(TypeUpdateRequest $request, $id)
     {
-        $info = Type::find((int)$id);
-        $logo = $info->logo;
+        $info = $this->type->returnById($id);
         foreach (array_keys($this->fields) as $field) {
             $info->$field = $request->get($field);
         }
         unset($info->perms);
-        $info->save();
+        $this->type->save($info);
         return redirect('/admin/type')->withSuccess('修改成功！');
     }
 
@@ -118,9 +123,9 @@ class TypeController extends Controller
      */
     public function destroy($id)
     {
-        $info = Type::find((int)$id);
+        $info = $this->type->returnById($id);
         if ($info) {
-            $info->delete();
+            $this->type->delete($info);
         } else {
             return redirect()->back()
                 ->withErrors("删除失败");
