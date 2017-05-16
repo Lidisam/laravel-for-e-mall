@@ -34,7 +34,7 @@ $(document).ready(function () {
                 var shopOffset = $(".hoverCart").offset();
                 var cloneDiv = $(this).parent().siblings(".goodsPic").clone();
                 var proOffset = $(this).parent().siblings(".goodsPic").offset();
-                cloneDiv.css({"position": "absolute", "top": proOffset.top, "left": proOffset.left});
+                // cloneDiv.css({"position": "absolute", "top": proOffset.top, "left": proOffset.left});
                 $(this).parent().siblings(".goodsPic").parent().append(cloneDiv);
                 cloneDiv.animate({
                     width: 0,

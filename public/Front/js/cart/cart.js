@@ -12,16 +12,18 @@ $(document).ready(function () {
 
     //show or hide:delBtn
     var totalPrice = $("#totalPrice");
-    $(".edit").toggle(function () {
-        $(this).parent().siblings("dd").find(".delBtn").fadeIn();
-        $(this).html("完成");
-        $(".numberWidget").show();
-        $(".priceArea").hide();
-    }, function () {
-        $(this).parent().siblings("dd").find(".delBtn").fadeOut();
-        $(this).html("编辑");
-        $(".numberWidget").hide();
-        $(".priceArea").show();
+    $(".edit").click(function () {
+        if ($(".priceArea").css("display") == "block") {
+            $(this).parent().siblings("dd").find(".delBtn").fadeIn();
+            $(this).html("完成");
+            $(".numberWidget").show();
+            $(".priceArea").hide();
+        }else{
+            $(this).parent().siblings("dd").find(".delBtn").fadeOut();
+            $(this).html("编辑");
+            $(".numberWidget").hide();
+            $(".priceArea").show();
+        }
     });
     //minus
     $(".minus").click(function () {

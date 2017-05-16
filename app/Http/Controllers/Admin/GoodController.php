@@ -140,6 +140,7 @@ class GoodController extends Controller
         $info->sm_logo = $fileRes['savePath'] . '/thumb_' . $fileRes['path'];
         /******插入后及其处理*******/
         $data = $info->after_insert($request, $info, $tmp_request);
+        $data->addToIndex();   //为其添加elasticsearch索引
         return redirect('/admin/good')->withSuccess('添加成功！');
     }
 
@@ -189,11 +190,12 @@ class GoodController extends Controller
         }
         unset($info->perms);
         $result = $model->after_update($request, $id, $info, $picRepository);  //特殊输入插入处理
-        if (count($result['picRes'])) {   //图片处理
+        if (count($result) && count($result['picRes'])) {   //图片处理
             $info->logo = $result['picRes']['savePath'] . '/' . $result['picRes']['path'];
             $info->sm_logo = $result['picRes']['savePath'] . '/thumb_' . $result['picRes']['path'];
         }
         $info->save();
+        $info->updateIndex();
         return redirect('/admin/good')->withSuccess('修改成功！');
     }
 
@@ -209,9 +211,10 @@ class GoodController extends Controller
      */
     public function destroy($id)
     {
-        $info = Categorys::find((int)$id);
+        $info = Good::find((int)$id);
         if ($info) {
             $info->delete();
+            $info->removeFromIndex();   //从elasticsearch移除索引
         } else {
             return redirect()->back()
                 ->withErrors("删除失败");

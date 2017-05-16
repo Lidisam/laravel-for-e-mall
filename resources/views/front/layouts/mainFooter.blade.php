@@ -3,7 +3,7 @@
     <a href="/" class="homeIcon">首页</a>
     <a href="{{ route('front.cart.index') }}" class="categoryIcon">分类</a>
     <a href="{{ route('front.cart.index') }}" class="cartIcon">购物车</a>
-    <a href="user.html" class="userIcon">我的</a>
+    <a href="{{ route('front.user.index') }}" class="userIcon">我的</a>
 </nav>
 <script>
     document.oncontextmenu = new Function("event.returnValue=false;");

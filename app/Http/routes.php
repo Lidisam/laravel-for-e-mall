@@ -109,8 +109,16 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     Route::resource('admin/customer', 'CustomerController');
     Route::put('admin/customer/update', ['as' => 'admin.customer.edit', 'uses' => 'CustomerController@update']); //修改
     Route::post('admin/customer/store', ['as' => 'admin.customer.create', 'uses' => 'CustomerController@store']); //添加
+
     //用户的收货地址管理
     Route::get('admin/user_address/{user_id}', ['as' => 'admin.user_address.manage', 'uses' => 'UserAddressController@index']);
+
+//    //首页管理
+//    Route::get('admin/front/manage', ['as' => 'admin.customer.manage', 'uses' => 'CustomerController@index']);
+//    Route::post('admin/front/index', ['as' => 'admin.customer.index', 'uses' => 'CustomerController@index']);
+//    Route::resource('admin/front', 'CustomerController');
+//    Route::put('admin/front/update', ['as' => 'admin.customer.edit', 'uses' => 'CustomerController@update']); //修改
+//    Route::post('admin/front/store', ['as' => 'admin.customer.create', 'uses' => 'CustomerController@store']); //添加
 
 });
 
@@ -151,6 +159,18 @@ $router->group(['namespace' => 'Front'], function () {
     //货物搜索
     Route::get('/search', ['as' => 'front.search.index', 'uses' => 'SearchController@index']);  //搜索页显示
     Route::post('/search/msg', ['as' => 'front.search.commit', 'uses' => 'SearchController@commit']);  //提交搜索
+
+    //用户中心
+    Route::get('/user', ['as' => 'front.user.index', 'uses' => 'UserController@index']);  //用户管理首页
+    Route::get('/order_list', ['as' => 'front.user.order_list', 'uses' => 'UserController@order_list']);  //用户订单
+    Route::any('/abolish_order/{order_id}', ['as' => 'front.user.abolish_order', 'uses' => 'UserController@abolish_order']);  //取消订单
+    Route::get('/favorite', ['as' => 'front.user.favorite', 'uses' => 'UserController@favorite']);  //常购清单
+    Route::get('/profile', ['as' => 'front.user.profile', 'uses' => 'UserController@profile']);  //个人资料
+    Route::get('/change_name', ['as' => 'front.user.change_name', 'uses' => 'UserController@change_name']);  //个人资料该用户名
+    Route::get('/user_set', ['as' => 'front.user.user_set', 'uses' => 'UserController@user_set']);  //用户设置
+    Route::get('/change_pwd', ['as' => 'front.user.change_pwd', 'uses' => 'UserController@change_pwd']);  //修改密码
+    Route::get('/article', ['as' => 'front.user.article', 'uses' => 'UserController@article']);  //我的地址
+    Route::get('/logout', ['as' => 'front.user.logout', 'uses' => 'UserController@logout']);  //登出
 
 
 });

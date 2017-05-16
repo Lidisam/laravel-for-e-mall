@@ -17,7 +17,8 @@
     "arcanedev/log-viewer": "~3.0",
     "intervention/image": "^2.3",
     "gloudemans/shoppingcart": "^2.3",
-    "stevenyangecho/laravel-u-editor": "1.4.*"
+    "stevenyangecho/laravel-u-editor": "1.4.*",
+    "elasticquent/elasticquent": "dev-master"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",

@@ -23,7 +23,9 @@ class SearchController extends Controller
      */
     public function index()
     {
-        return view('front.search.index');
+        $history = json_decode(session('search'), true);
+
+        return view('front.search.index', compact('history'));
     }
 
     /**
@@ -34,9 +36,11 @@ class SearchController extends Controller
     public function commit(Request $request)
     {
         $keyword = $request->get('keyword');
-//        $this->search->dealSearchHistory($keyword);
+        //处理搜索的历史记录
+        $this->search->dealSearchHistory($keyword);
+        //使用elasticsearch搜索(TODO:这里返回的是全部)
+        $data = $this->search->returnGoods($keyword);
 
-        return view('front.search.list')->withCookie('dd','ddd');
+        return view('front.search.list', compact('data'));
     }
 }
-

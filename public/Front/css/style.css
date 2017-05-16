@@ -38,8 +38,8 @@ ul{margin:0;padding:0;list-style-type:none}
 hr{margin-top:.28rem;margin-bottom:.28rem;border:0;border-top:1px solid #DDD8CE}
 h6,p{line-height:1.41;text-align:justify;margin:-.2em 0;word-break:break-all}
 small,weak{color:#666}
-::-webkit-input-placeholder {color:#999;line-height:inherit;} 
-:-moz-placeholder {color:#999;line-height:inherit;} 
+::-webkit-input-placeholder {color:#999;line-height:inherit;}
+:-moz-placeholder {color:#999;line-height:inherit;}
 ::-moz-placeholder {color:#999;line-height:inherit;}
 @font-face {
     font-family:'freshregular';
@@ -323,4 +323,7 @@ nav .userIcon:before{content:"U";}
 }
 .address-list .confirmAddr a{
     color: #aaaaaa
+}
+a {
+    cursor: pointer;
 }

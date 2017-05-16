@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Repositories\PicRepository;
 use DaveJamesMiller\Breadcrumbs\Exception;
+use Elasticquent\ElasticquentTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 
 class Good extends Model
 {
+    use ElasticquentTrait;
 
     /**
      * 自定义orm连接
@@ -18,6 +20,11 @@ class Good extends Model
     public function scopeOnSaled($query)
     {
         return $query->where('is_on_sale', 1);
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'good_order', 'good_id', 'order_id');
     }
 
 
@@ -204,7 +211,7 @@ class Good extends Model
      * @param $request
      * @param $model
      * @param $tmp_request
-     * @return array
+     * @return int
      */
     public function after_insert($request, $model, $tmp_request)
     {
@@ -214,7 +221,7 @@ class Good extends Model
         $res = $model->save();
         if (!$res) {
             DB::rollback();
-            return false;
+            return 0;
         }
         $goods_id = $model->id;
         $correct = true;
@@ -309,10 +316,10 @@ class Good extends Model
         }
         if (!$correct) {
             DB::rollback();
-            return false;
+            return 0;
         }
         DB::commit();
-        return [true];
+        return $model;
     }
 
 
@@ -332,6 +339,11 @@ class Good extends Model
         if (isset($data['is_promote'])) {
             $data['promote_start_time'] = strtotime($data['promote_start_time']);
             $data['promote_end_time'] = strtotime($data['promote_end_time']);
+        } else {
+            unset($fields['is_promote']);
+            unset($fields['promote_price']);
+            unset($fields['promote_start_time']);
+            unset($fields['promote_end_time']);
         }
         unset($fields['logo']);
         unset($fields['sm_logo']);

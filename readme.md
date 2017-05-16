@@ -20,6 +20,7 @@
 
 ## 安装
 
+- 首先安装elasticsearch到本地(教程：xxxxx)
 - git clone 到本地
 - 执行 `composer install` (如果出现数据库方面的错误提示,请将 database/seeds/rbac.sql 先导入你创建的数据库)
 - 配置 **.env** 中数据库连接信息,没有.env请复制.env.example命名为.env

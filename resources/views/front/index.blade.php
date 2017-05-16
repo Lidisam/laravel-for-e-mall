@@ -4,6 +4,7 @@
 
 @section('content')
     <script src="{{ asset('Front/js/swiper.min.js') }}"></script>
+    {{--加入购物车--}}
     <script src="{{ asset('Front/js/index.js') }}"></script>
     <!--header-->
     <header>
@@ -16,7 +17,7 @@
     <div id="slide">
         <div class="swiper-wrapper">
             @foreach($ads as $k => $v)
-                <div class="swiper-slide">
+                <div class="swiper-slide" style="width: 100%">
                     <a href="{{ $v->ad_url }}">
                         <img src="/{{ $v->ad_sm_logo }}" alt="{{ $v->ad_name }}"/>
                     </a>

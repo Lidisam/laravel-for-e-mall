@@ -46,4 +46,5 @@
         <a>合计：￥<span id="totalPrice">{{ $totalPrice }}</span></a>
         <a href="{{ route('front.order.index') }}"
            style="background:#64ab5b;color:white;text-shadow:none;">立即下单</a>
+    </aside>
 @stop

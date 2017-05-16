@@ -19,18 +19,19 @@
         </form>
     </aside>
     {{--E=搜索--}}
-    <dl class="searchHistory" style="padding-bottom: 10px">
+    <dl class="searchHistory" style="padding-bottom: 1px">
         <dt>历史搜索</dt>
         <dd>
             <ul>
-                <li><a href="category.html">白菜</a></li>
-                <li><a href="category.html">菠菜</a></li>
-                <li><a href="category.html">醋</a></li>
-                <li><a href="category.html">东北大米</a></li>
+                @if(isset($history))
+                    @foreach($history as $k => $v)
+                        <li><a class="history">{{ $v }}</a></li>
+                    @endforeach
+                @endif
             </ul>
         </dd>
         <dd>
-            <a style="line-height: 25px">清空历史记录</a>
+            {{--<a style="line-height: 25px">清空历史记录</a>--}}
         </dd>
     </dl>
 @stop
