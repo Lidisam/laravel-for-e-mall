@@ -41,7 +41,7 @@ class UserController extends Controller
     public function order_list()
     {
         $user = Auth::guard('client')->user();
-        $wait_pay_orders = $this->user->returnOrderMsgs($user->id, ['order_status' => 0]);
+        $wait_pay_orders = $this->user->returnOrderMsgs($user->id, ['deliver_status' => 0]);
         $wait_delivery_orders = $this->user->returnOrderMsgs($user->id, ['deliver_status' => 1]);
         $achieved_orders = $this->user->returnOrderMsgs($user->id, ['deliver_status' => 2]);
 

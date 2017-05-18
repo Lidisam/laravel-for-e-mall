@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'user_id');
     }
+
+    public function hasLevel()
+    {
+        return $this->hasOne(MemberLevel::class, 'id', 'level_id');
+    }
 }

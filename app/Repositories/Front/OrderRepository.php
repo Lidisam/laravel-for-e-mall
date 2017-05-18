@@ -5,6 +5,7 @@ namespace App\Repositories\Front;
 
 use App\Models\GoodOrder;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\UserAddress;
 use DaveJamesMiller\Breadcrumbs\Exception;
 use Gloudemans\Shoppingcart\Facades\Cart;
@@ -12,6 +13,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @property mixed id
+ */
 class OrderRepository
 {
     /**
@@ -21,6 +25,14 @@ class OrderRepository
     public function returnAddressMesssage()
     {
         return Auth::guard('client')->user()->currentUserAddress();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function returnAllPays()
+    {
+        return Payment::all();
     }
 
     /**

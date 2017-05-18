@@ -49,6 +49,7 @@ class GoodController extends Controller
         'type_id' => '',
         'sort_num' => '',
         'addtime' => '',  //*
+        'goods_quantity' => ''
     ];
 
 

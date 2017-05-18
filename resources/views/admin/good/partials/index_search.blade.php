@@ -24,7 +24,7 @@
         box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
     }
 </style>
-<div class="col-md-11 delMargin index_search">
+<div class="col-md-11 delMargin index_search" style="width: 100%">
     <div class="form-group">
         <div class="col-md-2">
             <input type="text" maxlength="45" class="search_example form-control" name="goods_name"
@@ -131,6 +131,11 @@
             <label class="radio-inline">
                 <input type="radio" class="search_example" value="0" name="is_delete">否
             </label>
+        </div>
+        <div class="text-right">
+            <a href="/admin/good/create" class="btn btn-success btn-md">
+                <i class="fa fa-plus-circle"></i> 添加
+            </a>
         </div>
     </div>
 </div>

@@ -30,7 +30,8 @@
                                     <label for="tag" class="col-md-3 control-label"></label>
                                     <div class="col-md-5">
                                         <img src="/{{ $logo }}" alt="{{ $brand_name }}"
-                                             style="max-height: 150px;max-width: 500px">
+                                             style="max-height: 150px;max-width: 500px"
+                                             onerror="javascript:this.src='{{ asset('dist/img/error.jpg') }}';">
                                     </div>
                                 </div>
                                 <div class="form-group">

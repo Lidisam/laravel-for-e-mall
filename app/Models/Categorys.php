@@ -44,6 +44,4 @@ class Categorys extends Model
 
 
 
-
-
 }

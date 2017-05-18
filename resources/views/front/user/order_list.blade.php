@@ -13,12 +13,12 @@
     <div style="height:1rem;"></div>
     <!--异步处理，此处不做TAB形式,注意当前状态样式currStyle-->
     <aside class="orderSift">
-        <a class="currStyle waitPay">待付款</a>
-        <a class="waitDeliver">待发货</a>
+        <a class="currStyle waitPay">待发货</a>
+        <a class="waitDeliver">待收货</a>
         <a class="achieved">已完成</a>
     </aside>
     <!--订单列表-->
-    {{--S=待付款订单--}}
+    {{--S=待发货订单--}}
     <ul class="orderList" id="waitPayList">
         <!--订单循环li-->
         @if(count($wait_pay_orders->toArray()))
@@ -60,8 +60,8 @@
             </li>
         @endif
     </ul>
-    {{--E=待付款订单--}}
-    {{--S=待发货订单--}}
+    {{--E=待发货订单--}}
+    {{--S=待收货订单--}}
     <ul class="orderList" id="waitDeliverList" style="display: none">
         <!--订单循环li-->
         @if(count($wait_delivery_orders->toArray()))
@@ -87,7 +87,7 @@
                             <span>实付：<b>{{ $v->real_price }}</b></span>
                         </dd>
                         <dd>
-                            <a class="order_payBtn">待发货</a>
+                            <a class="order_payBtn">待收货</a>
                         </dd>
                     </dl>
                 </li>

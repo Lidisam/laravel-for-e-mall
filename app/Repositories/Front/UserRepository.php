@@ -4,6 +4,7 @@ namespace App\Repositories\Front;
 
 
 use App\Models\Order;
+use Mews\Purifier\Facades\Purifier;
 
 class UserRepository
 {
@@ -39,7 +40,7 @@ class UserRepository
      */
     public function delOrderByInfo($info, $reason)
     {
-        return $info->update(['is_del' => 1, 'del_msg' => $reason]);
+        return $info->update(['is_del' => 1, 'del_msg' => Purifier::clean($reason)]);
     }
 }
 

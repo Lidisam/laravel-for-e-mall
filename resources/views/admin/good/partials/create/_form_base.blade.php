@@ -169,6 +169,14 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="col-md-3 control-label">商品库存</label>
+        <div class="col-md-5">
+            <input type="text" maxlength="3" class="form-control" placeholder="请填写该商品的库存" name="goods_quantity"
+                   value="{{ $goods_quantity?$goods_quantity:0 }}"
+                   onkeyup="this.value=this.value.replace(/\D/g,'')">
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-md-3 control-label">seo_关键字</label>
         <div class="col-md-5">
             <input type="text" maxlength="250" class="form-control" name="sec_keyword" value="{{ $sec_keyword }}">

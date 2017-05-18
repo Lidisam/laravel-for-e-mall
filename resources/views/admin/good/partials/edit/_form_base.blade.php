@@ -122,7 +122,7 @@
         <div class="col-md-5">
             <input type="text" class="form-control laydate-icon-molv skindemo" name="promote_start_time"
                    onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" disabled="disabled"
-                   value="<?=date("Y-m-d H:i:s",$promote_start_time);?>" style="height: 34px">
+                   value="<?=date("Y-m-d H:i:s", $promote_start_time);?>" style="height: 34px">
         </div>
     </div>
     <div class="form-group">
@@ -130,7 +130,7 @@
         <div class="col-md-5">
             <input type="text" class="form-control laydate-icon-molv skindemo" name="promote_end_time"
                    onclick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})" disabled="disabled"
-                   value="<?=date("Y-m-d H:i:s",$promote_end_time);?>" style="height: 34px">
+                   value="<?=date("Y-m-d H:i:s", $promote_end_time);?>" style="height: 34px">
         </div>
     </div>
     <div class="form-group">
@@ -184,6 +184,14 @@
         <div class="col-md-5">
             <input type="text" maxlength="3" class="form-control" placeholder="默认值100，数值大优先级高" name="sort_num"
                    value="@if(!isset($sort_num)){{ $sort_num }}@else{{ 100 }}@endif"
+                   onkeyup="this.value=this.value.replace(/\D/g,'')">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-3 control-label">商品库存</label>
+        <div class="col-md-5">
+            <input type="text" maxlength="3" class="form-control" placeholder="请填写该商品的库存" name="goods_quantity"
+                   value="{{ $goods_quantity?$goods_quantity:0 }}"
                    onkeyup="this.value=this.value.replace(/\D/g,'')">
         </div>
     </div>

@@ -3,7 +3,7 @@
 @section('title','首页')
 
 @section('content')
-        <script src="{{ asset('Front/js/order/index.js') }}"></script>
+    <script src="{{ asset('Front/js/order/index.js') }}"></script>
 
     <header>
         <a href="javascript:history.go(-1);" class="iconfont backIcon">&#60;</a>
@@ -24,10 +24,24 @@
     <dl class="payment">
         <dt>选择支付方式</dt>
         <dd>
-            {{--TODO:先默认设置支付方式的id为1，2--}}
-            <label><input type="radio" name="pay" value="1"/>支付宝支付</label>
-            <label><input type="radio" name="pay" value="2"/>微信支付</label>
+            @if(!Session::get('pay'))
+                @foreach(\App\Models\Payment::all() as $k => $v)
+                    <label><input type="radio" name="pay" value="{{ $v->id }}"/>{{ $v->pay_name }}</label>
+                    @if($k == 1) @break(1) @endif
+                @endforeach
+            @else
+                @foreach(\App\Models\Payment::all() as $k => $v)
+                    @if(Session::get('pay') == $v->id)
+                        <label>
+                            <input type="radio" name="pay" checked value="{{ $v->id }}"/>{{ $v->pay_name }}
+                        </label>
+                    @endif
+                @endforeach
+            @endif
         </dd>
+        <div class="col-md-12 text-right" style="padding-bottom: 5px">
+            <a href="{{ route('front.order.more_pay') }}" style="color: #BBB5B5;">点击更多</a>
+        </div>
     </dl>
     <section class="order_msg">
         <h2>我要留言</h2>

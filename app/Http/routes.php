@@ -113,12 +113,20 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     //用户的收货地址管理
     Route::get('admin/user_address/{user_id}', ['as' => 'admin.user_address.manage', 'uses' => 'UserAddressController@index']);
 
-//    //首页管理
-//    Route::get('admin/front/manage', ['as' => 'admin.customer.manage', 'uses' => 'CustomerController@index']);
-//    Route::post('admin/front/index', ['as' => 'admin.customer.index', 'uses' => 'CustomerController@index']);
-//    Route::resource('admin/front', 'CustomerController');
-//    Route::put('admin/front/update', ['as' => 'admin.customer.edit', 'uses' => 'CustomerController@update']); //修改
-//    Route::post('admin/front/store', ['as' => 'admin.customer.create', 'uses' => 'CustomerController@store']); //添加
+    //订单管理
+    Route::get('admin/order/manage', ['as' => 'admin.order.manage', 'uses' => 'OrderController@index']);
+    Route::post('admin/order/index', ['as' => 'admin.order.index', 'uses' => 'OrderController@index']);
+    Route::resource('admin/order', 'OrderController');
+    Route::put('admin/order/update', ['as' => 'admin.order.edit', 'uses' => 'OrderController@update']); //修改
+    Route::post('admin/order/store', ['as' => 'admin.order.create', 'uses' => 'OrderController@store']); //添加
+
+    /**系统设置**/
+    Route::get('admin/set/manage', ['as' => 'admin.set.manage', 'uses' => 'Set\SetController@index']);
+    //---支付方式
+    Route::get('admin/set/payment', ['as' => 'admin.set.payment.index', 'uses' => 'Set\PaymentController@index']);
+    Route::get('admin/set/payment/{pay_id}/edit', ['as' => 'admin.set.payment.edit', 'uses' => 'Set\PaymentController@edit']);
+    Route::post('admin/set/payment/{pay_id}/store', ['as' => 'admin.set.payment.store', 'uses' => 'Set\PaymentController@store']);
+
 
 });
 
@@ -145,6 +153,7 @@ $router->group(['namespace' => 'Front'], function () {
 
     //下单
     Route::get('/confirmOrder', ['as' => 'front.order.index', 'uses' => 'OrderController@index']);
+    Route::any('/more_pay', ['as' => 'front.order.more_pay', 'uses' => 'OrderController@more_pay']);
     Route::post('/confirm', ['as' => 'front.order.confirm', 'uses' => 'OrderController@confirm']);
     Route::get('/confirm', ['as' => 'front.order.confirm', 'uses' => 'OrderController@confirmRes']);
 

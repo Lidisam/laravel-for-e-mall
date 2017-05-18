@@ -18,7 +18,8 @@
     "intervention/image": "^2.3",
     "gloudemans/shoppingcart": "^2.3",
     "stevenyangecho/laravel-u-editor": "1.4.*",
-    "elasticquent/elasticquent": "dev-master"
+    "elasticquent/elasticquent": "dev-master",
+    "mews/purifier": "^2.0"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",

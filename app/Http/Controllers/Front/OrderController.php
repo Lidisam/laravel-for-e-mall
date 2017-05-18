@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\UserAddress;
 use App\Http\Controllers\Controller;
 use App\Repositories\Front\OrderRepository;
@@ -50,6 +51,21 @@ class OrderController extends Controller
     {
         $arr = $this->orderRepository->redirectConfirmView();
         return view('front.order.confirm', $arr);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function more_pay(Request $request)
+    {
+        $data = $this->orderRepository->returnAllPays();
+        if ($request->isMethod('post')) {
+            $pay_way = $request->get('pay_way');
+            return redirect()->route('front.order.index')->with(['pay' => $pay_way]);
+        }
+
+        return view('front.order.more_pay', compact('data'));
     }
 
 

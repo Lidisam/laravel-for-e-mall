@@ -27,6 +27,11 @@ class Good extends Model
         return $this->belongsToMany(Order::class, 'good_order', 'good_id', 'order_id');
     }
 
+    public function brand()
+    {
+        return $this->hasOne(Brand::class, 'id', 'brand_id');
+    }
+
 
     /**
      * 取出商品的编辑数据
