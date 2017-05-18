@@ -119,7 +119,7 @@
                                 {"data": "order_num"},
                                 {"data": "consigner"},
                                 {"data": "real_price"},
-                                {"data": "order_status"},
+                                {"data": "pay_status"},
                                 {"data": "created_at"},
                                 {"data": "action"}
                             ],
@@ -137,7 +137,7 @@
                         $(".dataTables_filter label input[type=search]").hide();
                         $(".search_example").on('keyup change', function () {
                             var val1 = $("[name=order_num]").val();
-                            var val2 = $("[name=order_status]:checked").val();
+                            var val2 = $("[name=pay_status]:checked").val();
                             var val3 = $("[name=deliver_status]:checked").val();
                             var val4 = $("[name=is_del]:checked").val();
                             var val5 = $("[name=order_start_price]").val();
@@ -148,7 +148,7 @@
                             //自带的那个搜索框
                             table.search(
                                 '{"order_num":"' + val1 + '",' +
-                                '"order_status":"' + val2 + '",' +
+                                '"pay_status":"' + val2 + '",' +
                                 '"deliver_status":"' + val3 + '",' +
                                 '"is_del":"' + val4 + '",' +
                                 '"order_start_price":"' + val5 + '",' +

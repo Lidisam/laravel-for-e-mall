@@ -113,12 +113,15 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     //用户的收货地址管理
     Route::get('admin/user_address/{user_id}', ['as' => 'admin.user_address.manage', 'uses' => 'UserAddressController@index']);
 
-    //订单管理
+    /**订单管理**/
     Route::get('admin/order/manage', ['as' => 'admin.order.manage', 'uses' => 'OrderController@index']);
     Route::post('admin/order/index', ['as' => 'admin.order.index', 'uses' => 'OrderController@index']);
     Route::resource('admin/order', 'OrderController');
     Route::put('admin/order/update', ['as' => 'admin.order.edit', 'uses' => 'OrderController@update']); //修改
     Route::post('admin/order/store', ['as' => 'admin.order.create', 'uses' => 'OrderController@store']); //添加
+    //---订单修改操作
+    Route::post('admin/order/operate/update', ['as' => 'admin.order.operate.update', 'uses' => 'Order\OperationController@index']);
+
 
     /**系统设置**/
     Route::get('admin/set/manage', ['as' => 'admin.set.manage', 'uses' => 'Set\SetController@index']);

@@ -63,13 +63,13 @@
         <div class="delMargin radio-style">
             付款：
             <label class="radio-inline">
-                <input type="radio" class="search_example" value="" name="order_status" checked>全部
+                <input type="radio" class="search_example" value="" name="pay_status" checked>全部
             </label>
             <label class="radio-inline">
-                <input type="radio" class="search_example" value="0" name="order_status">未付款
+                <input type="radio" class="search_example" value="0" name="pay_status">未付款
             </label>
             <label class="radio-inline">
-                <input type="radio" class="search_example" value="1" name="order_status">已付款
+                <input type="radio" class="search_example" value="1" name="pay_status">已付款
             </label>
         </div>
         <div class="delMargin radio-style">

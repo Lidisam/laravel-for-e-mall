@@ -1,8 +1,8 @@
-$(document).ready(function(){
+$(document).ready(function () {
     //测试返回页面，程序对接删除即可
-    $(".userForm input[type='button']").click(function(){
+    $(".userForm input[type='button']").click(function () {
         alert("地址修改成功！");
-        location.href="user_set.html";
+        location.href = "user_set.html";
     });
     $("[name=select]").change(function () {
         var addressId = $(this).parent().parent().parent().find("a").attr('about');
@@ -14,6 +14,9 @@ $(document).ready(function(){
             },
             beforeSend: function (request) {
                 return request.setRequestHeader('X-CSRF-Token', $("meta[name='_token']").attr('content'));
+            },
+            error: function (e) {
+                layer.msg('修改失败,请重新点击');
             }
         });
 

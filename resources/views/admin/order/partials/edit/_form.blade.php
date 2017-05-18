@@ -1,6 +1,101 @@
 {{--laydate时间插件--}}
 <link rel="stylesheet" href="{{ asset('dist/css/order-edit.css') }}">
-<script src="/packages/layer/module/laydate/laydate.js"></script>
+<script src="{{ asset('dist/js/tool/time.js') }}"></script>
+<script src="{{ asset('packages/layer/layer.js') }}"></script>
+<script>
+    var order_status = null;
+    var pay_status = null;
+    var deliver_status = null;
+
+    /**
+     * @param mode 订单操作方式
+     */
+    function commitOperation(mode) {
+        if (order_status != null || pay_status != null || deliver_status != null) {
+            if (mode == 'order_status') {  //确认
+                order_status = parseInt(order_status) ? 0 : 1;
+                pay_status = parseInt(pay_status);
+                deliver_status = parseInt(deliver_status);
+            } else if (mode == 'pay_status') {  //付款
+                order_status = parseInt(order_status);
+                pay_status = parseInt(pay_status) ? 0 : 1;
+                deliver_status = parseInt(deliver_status);
+            } else if (mode == 'deliver_status') {  //发货
+                order_status = parseInt(order_status);
+                pay_status = parseInt(pay_status);
+                deliver_status = parseInt(deliver_status) ? 0 : 1;
+            }
+        } else {
+            if (mode == 'order_status') {  //确认
+                order_status = parseInt("{{ $order_status}}") ? 0 : 1;
+                pay_status = parseInt("{{ $pay_status }}");
+                deliver_status = parseInt("{{ $deliver_status }}");
+            } else if (mode == 'pay_status') {  //付款
+                order_status = parseInt("{{ $order_status }}");
+                pay_status = parseInt("{{ $pay_status }}") ? 0 : 1;
+                deliver_status = parseInt("{{ $deliver_status }}");
+            } else if (mode == 'deliver_status') {  //发货
+                order_status = parseInt("{{ $order_status }}");
+                pay_status = parseInt("{{ $pay_status }}");
+                deliver_status = parseInt("{{ $deliver_status }}") ? 0 : 1;
+            }
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('admin.order.operate.update') }}",
+            data: {
+                reason: $("[name=operate_reason]").val() + $("#" + mode + "").attr('about'),
+                order_status: order_status,
+                pay_status: pay_status,
+                deliver_status: deliver_status,
+                order_id: "{{ $id }}",
+                mode: mode
+            },
+            beforeSend: function (request) {
+                return request.setRequestHeader('X-CSRF-Token', $("meta[name='_token']").attr('content'));
+            },
+            success: function (data) {
+                if (data) {
+                    var text = $("#" + mode + "").text();   //TODO：暂时切换着。。。。，正则匹配下有没未，如果有则去掉无则加上
+                    if (parseInt(text.indexOf('未')) < 0) {
+                        if (mode == 'order_status') {
+                            $("#" + mode + "").text('未确认');
+                        } else if (mode == 'pay_status') {
+                            $("#" + mode + "").text('未付款');
+                        } else if (mode == 'deliver_status') {
+                            $("#" + mode + "").text('未发货');
+                        }
+                    } else {
+                        if (mode == 'order_status') {
+                            $("#" + mode + "").text('已确认');
+                        } else if (mode == 'pay_status') {
+                            $("#" + mode + "").text('已付款');
+                        } else if (mode == 'deliver_status') {
+                            $("#" + mode + "").text('已发货');
+                        }
+                    }
+                    $("#operation-detail").append('' +
+                        '<div class="content-detail"> ' +
+                        '<div class="col-md-2">' + ("{{ \Illuminate\Support\Facades\Auth::user()->name }}") + '</div>' +
+                        '<div class="col-md-2">' + (getNowFormatDate()) + '</div>' +
+                        '<div class="col-md-2">' + (order_status ? "已确认" : "未确认") + '</div>' +
+                        '<div class="col-md-2">' + (pay_status ? "已付款" : "未付款") + '</div>' +
+                        '<div class="col-md-2">' + (deliver_status ? "已发货" : "未发货") + '</div>' +
+                        '<div class="col-md-2">'
+                        + $("[name=operate_reason]").val() + $("#" + mode + "").attr('about') + '&nbsp;</div>' +
+                        '</div>')
+
+                } else {
+                    layer.msg('提交失败，请重新提交');
+                }
+            },
+            error: function () {
+                layer.msg('提交失败，请重新提交');
+            }
+        });
+    }
+</script>
 
 {{--S=信息--}}
 <div class="col-md-12 every-content">
@@ -13,7 +108,9 @@
         </div>
         <div class="col-md-6 detail-second-col">
             <div class="col-md-4">订单状态：</div>
-            <div class="col-md-8">{{ $order_status?'已':'未' }}确认,未付款(数据表待重写),{{ $deliver_status?'已':'未' }}发货</div>
+            <div class="col-md-8">{{ $order_status?'已':'未' }}确认,{{ $pay_status?'已':'未' }}
+                付款,{{ $deliver_status?'已':'未' }}发货
+            </div>
         </div>
     </div>
     <div class="content-detail">
@@ -114,9 +211,7 @@ TODO：，然后订单计算时购物车取出每个商品数目，并且最总�
 </div>
 {{--TODO:弄完这个促销需要在写入时改变添加促销is_promote,promote_price--}}
 <div class="col-md-12 every-content goods-content">
-    <div class="text-center content-title">费用信息
-        <button class="btn btn-sm btn-success">编辑</button>
-    </div>
+    <div class="text-center content-title">费用信息</div>
     <div class="content-detail">
         <div class="col-md-12 text-right">
             商品总金额：(
@@ -135,7 +230,6 @@ TODO：，然后订单计算时购物车取出每个商品数目，并且最总�
         合计：￥{{ sprintf("%.2f", $real_price) }}元
     </div>
 </div>
-{{--TODO:需要添加操作记录表，并重构确认，付款，发货三个状态--}}
 <div class="col-md-12 every-content goods-content operation-msg">
     <div class="text-center content-title">操作信息</div>
     <div class="content-detail">
@@ -143,7 +237,8 @@ TODO：，然后订单计算时购物车取出每个商品数目，并且最总�
             操作备注：
         </div>
         <div class="col-md-9 detail-second-col">
-            <textarea name="" cols="5" rows="2" class="form-control" style="width: 600px;margin-bottom: 10px"
+            <textarea name="operate_reason" cols="5" rows="2" class="form-control"
+                      style="width: 600px;margin-bottom: 10px"
                       placeholder="请输入当前操作备注"></textarea>
         </div>
     </div>
@@ -152,11 +247,18 @@ TODO：，然后订单计算时购物车取出每个商品数目，并且最总�
             当前可执行操作：
         </div>
         <div class="col-md-9 detail-second-col detail-button">
-            <button class="btn btn-sm btn-primary">确认</button>
-            <button class="btn btn-sm btn-primary">付款</button>
-            <button class="btn btn-sm btn-primary">取消</button>
-            <button class="btn btn-sm btn-primary">无效</button>
-            <button class="btn btn-sm btn-primary">售后</button>
+            <button type="button" class="btn btn-sm btn-primary" id="order_status"
+                    onclick="commitOperation('order_status')" about="[确认]">{{ $order_status?'已':'未' }}确认
+            </button>
+            <button type="button" class="btn btn-sm btn-primary" id="pay_status"
+                    onclick="commitOperation('pay_status')" about="[付款]">{{ $pay_status?'已':'未' }}付款
+            </button>
+            <button type="button" class="btn btn-sm btn-primary" id="deliver_status"
+                    onclick="commitOperation('deliver_status')" about="[发货]">{{ $deliver_status?'已':'未' }}发货
+            </button>
+            <button type="button" class="btn btn-sm btn-default"
+                    onclick="javascript:window.location.href='/admin/order'">返回订单页
+            </button>
         </div>
     </div>
 </div>
@@ -169,20 +271,20 @@ TODO：，然后订单计算时购物车取出每个商品数目，并且最总�
         <div class="col-md-2">发货状态：</div>
         <div class="col-md-2">备注：</div>
     </div>
-    @if(isset($order_operations) && count($order_operations->toArray()))
-        <div class="content-detail">
-            <div class="col-md-2">商品名称[品牌]</div>
-            <div class="col-md-2">价格</div>
-            <div class="col-md-2">数量</div>
-            <div class="col-md-2">库存</div>
-            <div class="col-md-2">促销[促销价]</div>
-            <div class="col-md-2">小计</div>
-        </div>
-    @else
-        <div class="content-detail text-center">
-            暂无操作记录
-        </div>
-    @endif
+    <div id="operation-detail">
+        @if(count($info->orders_operations->toArray()))
+            @foreach($info->orders_operations as $k => $v)
+                <div class="content-detail">
+                    <div class="col-md-2">{{ isset($v->admin->name)?$v->admin->name:'该管理员不存在' }}</div>
+                    <div class="col-md-2">{{ $v->created_at }}</div>
+                    <div class="col-md-2">{{ $v->order_status?'已确认':'未确认' }}</div>
+                    <div class="col-md-2">{{ $v->pay_status?'已付款':'未付款' }}</div>
+                    <div class="col-md-2">{{ $v->deliver_status?($v->deliver_status == 1?'已发货':'已收货'):'待发货' }}</div>
+                    <div class="col-md-2">{!! $v->reason !!}&nbsp;</div>
+                </div>
+            @endforeach
+        @endif
+    </div>
 </div>
 
 {{--E=信息--}}

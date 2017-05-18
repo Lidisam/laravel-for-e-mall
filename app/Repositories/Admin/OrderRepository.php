@@ -71,10 +71,10 @@ class OrderRepository
     public function transferOrders($data)
     {
         foreach ($data['data'] as $k => $v) {
-            if ($v->order_status == 0) {
-                $data['data'][$k]['order_status'] = '未付款';
-            } elseif ($v->order_status == 1) {
-                $data['data'][$k]['order_status'] = '已付款';
+            if ($v->pay_status == 0) {
+                $data['data'][$k]['pay_status'] = '未付款';
+            } elseif ($v->pay_status == 1) {
+                $data['data'][$k]['pay_status'] = '已付款';
             }
         }
         return $data;

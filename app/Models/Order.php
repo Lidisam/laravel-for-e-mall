@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = ['user_id', 'order_num', 'consigner', 'total_price', 'real_price',
-        'order_status', 'user_desc', 'pay_way_name', 'pay_way_id', 'user_address_id',
-        'is_del', 'deliver_status', 'del_msg', 'is_promote'];
+        'pay_status', 'user_desc', 'pay_way_name', 'pay_way_id', 'user_address_id',
+        'is_del', 'deliver_status', 'del_msg', 'is_promote', 'order_status'];
 
     public function user()
     {
@@ -25,6 +25,11 @@ class Order extends Model
     public function address()
     {
         return $this->hasOne(UserAddress::class, 'id', 'user_address_id');
+    }
+
+    public function orders_operations()
+    {
+        return $this->hasMany(OrdersOperation::class, 'order_id', 'id');
     }
 
 

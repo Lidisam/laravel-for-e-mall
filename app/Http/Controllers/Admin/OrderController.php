@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\AdStoreRequest;
 use App\Http\Requests\AdUpdateRequest;
-use App\Models\Order;
-use App\Models\Payment;
-use App\Models\UserAddress;
 use App\Repositories\Admin\OrderRepository;
 use Illuminate\Http\Request;
 
@@ -21,6 +17,7 @@ class OrderController extends Controller
         'total_price' => '',
         'real_price' => '',
         'user_desc' => '',
+        'pay_status' => '',
         'order_status' => '',
         'deliver_status' => '',
         'pay_way_name' => '',

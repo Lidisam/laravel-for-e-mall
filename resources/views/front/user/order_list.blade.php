@@ -27,7 +27,7 @@
                     <dl>
                         <dt>
                             <span>订单：{{ $v->order_num }}</span>
-                            <span>{{ $v->order_status == 0?'待付款':'已付款' }}</span>
+                            <span>{{ $v->pay_status == 0?'待付款':'已付款' }}</span>
                         </dt>
                         <!--订单产品循环dd-->
                         @foreach($v->goods as $k1 => $v1)
@@ -70,7 +70,7 @@
                     <dl>
                         <dt>
                             <span>订单：{{ $v->order_num }}</span>
-                            <span>{{ $v->order_status == 0?'待付款':'已付款' }}</span>
+                            <span>{{ $v->pay_status == 0?'待付款':'已付款' }}</span>
                         </dt>
                         <!--订单产品循环dd-->
                         @foreach($v->goods as $k1 => $v1)
@@ -110,7 +110,7 @@
                     <dl>
                         <dt>
                             <span>订单：{{ $v->order_num }}</span>
-                            <span>{{ $v->order_status == 0?'待付款':'已付款' }}</span>
+                            <span>{{ $v->pay_status == 0?'待付款':'已付款' }}</span>
                         </dt>
                         <!--订单产品循环dd-->
                         @foreach($v->goods as $k1 => $v1)
