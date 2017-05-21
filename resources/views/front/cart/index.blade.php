@@ -4,7 +4,8 @@
 
 @section('content')
     <script src="{{ asset('Front/js/cart/cart.js') }}"></script>
-
+    @include('front.partials.success')
+    @include('front.partials.errors')
     <header>
         <a href="javascript:history.go(-1);" class="iconfont backIcon">&#60;</a>
         <h1>购物车</h1>

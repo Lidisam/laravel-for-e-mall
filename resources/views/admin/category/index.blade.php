@@ -36,6 +36,7 @@
                         <tr>
                             <th data-sortable="false" class="hidden-sm"></th>
                             <th class="hidden-sm">分类名</th>
+                            <th class="hidden-sm">排序权重</th>
                             <th class="hidden-sm">上级分类</th>
                             <th class="hidden-md">创建时间</th>
                             <th data-sortable="false">操作</th>
@@ -62,7 +63,7 @@
                 <div class="modal-body">
                     <p class="lead">
                         <i class="fa fa-question-circle fa-lg"></i>
-                        确认要删除这个品牌吗?
+                        确认要删除吗?
                     </p>
                 </div>
                 <div class="modal-footer">
@@ -119,6 +120,7 @@
                             "columns": [
                                 {"data": "id"},
                                 {"data": "cat_name"},
+                                {"data": "order_weight"},
                                 {"data": "parent_id"},
                                 {"data": "created_at"},
                                 {"data": "action"}

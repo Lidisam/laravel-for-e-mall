@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\BrandStoreRequest;
-use App\Http\Requests\BrandUpdateRequest;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
 use App\Models\Attribute;
@@ -12,15 +11,11 @@ use App\Models\Categorys;
 use App\Models\Good;
 use App\Models\GoodsPic;
 use App\Models\MemberLevel;
-use App\Models\MemberPrice;
 use App\Models\Type;
 use App\Repositories\PicRepository;
-use DaveJamesMiller\Breadcrumbs\Exception;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use Intervention\Image\Facades\Image;
 
 class GoodController extends Controller
 {

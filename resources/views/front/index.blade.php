@@ -14,6 +14,7 @@
     </header>
     <div style="height:1rem;"></div>
     <!--S=广告slide-->
+
     <div id="slide">
         <div class="swiper-wrapper">
             @foreach($ads as $k => $v)
@@ -26,63 +27,30 @@
         </div>
         <div class="pagination"></div>
     </div>
-    <!--categoryList-->
+    {{--S=最前的几个分类--}}
     <ul class="categoryLiIcon">
+        @foreach($cats as $k => $v)
+            <li>
+                <a href="{{ route('front.category.product_list',['cat_id'=>$v->id]) }}">
+                    <img src="/{{ $v->cat_logo }}"/>
+                    <em>{{ $v->cat_name }}</em>
+                </a>
+            </li>
+        @endforeach
         <li>
-            <a href="category.html">
-                <img src="/Front/upload/menu_bg_01.png"/>
-                <em>蔬菜水果</em>
-            </a>
-        </li>
-        <li>
-            <a href="category.html">
-                <img src="/Front/upload/menu_bg_06.png"/>
-                <em>禽蛋肉类</em>
-            </a>
-        </li>
-        <li>
-            <a href="category.html">
-                <img src="/Front/upload/menu_bg_10.png"/>
-                <em>水产火锅</em>
-            </a>
-        </li>
-        <li>
-            <a href="category.html">
-                <img src="/Front/upload/menu_bg_14.png"/>
-                <em>熟食豆制</em>
-            </a>
-        </li>
-        <li>
-            <a href="category.html">
-                <img src="/Front/upload/menu_bg_03.png"/>
-                <em>米面粮油</em>
-            </a>
-        </li>
-        <li>
-            <a href="category.html">
-                <img src="/Front/upload/menu_bg_07.png"/>
-                <em>调料干货</em>
-            </a>
-        </li>
-        <li>
-            <a href="category.html">
-                <img src="/Front/upload/menu_bg_11.png"/>
-                <em>餐厨用品</em>
-            </a>
-        </li>
-        <li>
-            <a href="category.html">
-                <img src="/Front/upload/menu_bg_15.png"/>
-                <em>常购品</em>
+            <a href="{{ route('front.category.index') }}">
+                <img src="{{ asset('Front/images/index/menu_bg_15.png') }}"/>
+                <em>更多分类</em>
             </a>
         </li>
     </ul>
+    {{--E=最前的几个分类--}}
     <!--Tab:productList-->
     <dl class="tab_proList">
         <dt>
             <a>热销</a>
-            <a>新品</a>
-            <a>热销</a>
+            <a onclick="javascript:$('#new').show()">新品</a>
+            <a onclick="javascript:$('#best').show()">热销</a>
         </dt>
         <dd>
             <ul>
@@ -110,7 +78,7 @@
             </ul>
         </dd>
         <dd>
-            <ul>
+            <ul style="display: none;" id="new">
                 @foreach($thirdGoods['is_new'] as $k => $v)
                     <li>
                         <a href="{{ route('front.product.index', $v->id) }}" class="goodsPic">
@@ -135,7 +103,7 @@
             </ul>
         </dd>
         <dd>
-            <ul>
+            <ul style="display: none" id="best">
                 @foreach($thirdGoods['is_best'] as $k => $v)
                     <li>
                         <a href="{{ route('front.product.index', $v->id) }}" class="goodsPic">

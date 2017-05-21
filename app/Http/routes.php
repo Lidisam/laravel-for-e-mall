@@ -121,6 +121,8 @@ $router->group(['namespace' => 'Admin', 'middleware' => ['auth', 'authAdmin', 'm
     Route::post('admin/order/store', ['as' => 'admin.order.create', 'uses' => 'OrderController@store']); //添加
     //---订单修改操作
     Route::post('admin/order/operate/update', ['as' => 'admin.order.operate.update', 'uses' => 'Order\OperationController@index']);
+    //---TODO:订单打印
+    Route::get('admin/order/print/index', ['as' => 'admin.order.print.index', 'uses' => 'Order\PrintController@index']);
 
 
     /**系统设置**/
@@ -139,6 +141,7 @@ Route::get('/user/login', ['as' => 'front.auth.login', 'uses' => 'Front\AuthCont
 Route::post('/user/login', ['as' => 'front.auth.login', 'uses' => 'Front\AuthController@postLogin']);
 Route::get('/user/register', ['as' => 'front.auth.register', 'uses' => 'Front\AuthController@getRegister']);
 Route::post('/user/register', ['as' => 'front.auth.register', 'uses' => 'Front\AuthController@postRegister']);
+Route::post('/user/resetPwd', ['as' => 'front.auth.reset_pwd', 'uses' => 'Front\AuthController@postReSetPwd']);
 
 
 $router->group(['namespace' => 'Front'], function () {
@@ -178,11 +181,15 @@ $router->group(['namespace' => 'Front'], function () {
     Route::any('/abolish_order/{order_id}', ['as' => 'front.user.abolish_order', 'uses' => 'UserController@abolish_order']);  //取消订单
     Route::get('/favorite', ['as' => 'front.user.favorite', 'uses' => 'UserController@favorite']);  //常购清单
     Route::get('/profile', ['as' => 'front.user.profile', 'uses' => 'UserController@profile']);  //个人资料
-    Route::get('/change_name', ['as' => 'front.user.change_name', 'uses' => 'UserController@change_name']);  //个人资料该用户名
+    Route::any('/change_name', ['as' => 'front.user.change_name', 'uses' => 'UserController@change_name']);  //个人资料该用户名
     Route::get('/user_set', ['as' => 'front.user.user_set', 'uses' => 'UserController@user_set']);  //用户设置
-    Route::get('/change_pwd', ['as' => 'front.user.change_pwd', 'uses' => 'UserController@change_pwd']);  //修改密码
+    Route::any('/change_pwd', ['as' => 'front.user.change_pwd', 'uses' => 'UserController@change_pwd']);  //修改密码
     Route::get('/article', ['as' => 'front.user.article', 'uses' => 'UserController@article']);  //我的地址
     Route::get('/logout', ['as' => 'front.user.logout', 'uses' => 'UserController@logout']);  //登出
+
+    //商品分类
+    Route::get('/category', ['as' => 'front.category.index', 'uses' => 'CategoryController@index']);
+    Route::any('/category/{cat_id}/product_list', ['as' => 'front.category.product_list', 'uses' => 'CategoryController@product_list']);
 
 
 });

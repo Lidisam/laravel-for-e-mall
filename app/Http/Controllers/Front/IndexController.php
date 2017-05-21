@@ -23,7 +23,8 @@ class IndexController extends Controller
     {
         $thirdGoods = $this->indexRepository->returnThirdGoods();  //几种销量产品
         $ads = $this->indexRepository->returnAds();
+        $cats = $this->indexRepository->returnCats();
 
-        return view('front.index', compact('thirdGoods', 'ads'));
+        return view('front.index', compact('thirdGoods', 'ads', 'cats'));
     }
 }

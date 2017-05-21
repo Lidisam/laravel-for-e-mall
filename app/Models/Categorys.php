@@ -4,8 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string cat_logo
+ * @property string cat_pic
+ */
 class Categorys extends Model
 {
+
+
+    public function goods() {
+        return $this->hasMany(Good::class, 'cat_id', 'id');
+    }
+
     /**
      * 商品类别无限极分类,返回数组形式
      * @param $cate
@@ -41,7 +51,6 @@ class Categorys extends Model
         }
         return $obj;
     }
-
 
 
 }

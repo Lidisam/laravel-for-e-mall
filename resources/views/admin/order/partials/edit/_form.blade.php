@@ -177,11 +177,8 @@
         </div>
     </div>
 </div>
-{{--TODO：为数据表添加库存（已添加），然后修改购买时减少库存，创建商品时需加上该选项,又想到了要先修改购物车模块
-TODO：，然后订单计算时购物车取出每个商品数目，并且最总价格乘上促销价--}}
 <div class="col-md-12 every-content goods-content">
     <div class="text-center content-title">商品信息
-        <button class="btn btn-sm btn-success">编辑</button>
     </div>
     <div class="content-detail goods-title">
         <div class="col-md-2">商品名称[品牌]</div>
@@ -209,7 +206,6 @@ TODO：，然后订单计算时购物车取出每个商品数目，并且最总�
         合计：{{ sprintf("%.2f", $sum) }}
     </div>
 </div>
-{{--TODO:弄完这个促销需要在写入时改变添加促销is_promote,promote_price--}}
 <div class="col-md-12 every-content goods-content">
     <div class="text-center content-title">费用信息</div>
     <div class="content-detail">
@@ -223,7 +219,7 @@ TODO：，然后订单计算时购物车取出每个商品数目，并且最总�
                 @endif
             @endforeach
             <span>)</span> * 折扣率：{{ sprintf("%.2f", $info->user->hasLevel->rate) }}%
-            = 订单总金额：￥{{ sprintf("%.2f", $real_price) }}元
+            = 订单总金额：php￥{{ sprintf("%.2f", $real_price) }}元
         </div>
     </div>
     <div class="col-md-12 text-right content-total">

@@ -12,13 +12,7 @@
         <li>
             <a href="{{ route('front.user.change_name') }}" class="isNext">
                 <span>用户昵称</span>
-                <span>未设置</span>
-            </a>
-        </li>
-        <li>
-            <a href="change_tel.html" class="isNext">
-                <span>手机号码</span>
-                <span>18309275673</span>
+                <span>{{ ($name != '')?$name:'未设置' }}</span>
             </a>
         </li>
     </ul>

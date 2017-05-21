@@ -14,10 +14,12 @@ class UserController extends Controller
 
     protected $user;
 
+    protected $redirectTo = '/';
+    protected $guard = 'client';
+
     function __construct(UserRepository $userRepository)
     {
         $this->user = $userRepository;
-        $this->middleware(['auth:client']);
     }
 
 
@@ -28,7 +30,6 @@ class UserController extends Controller
     public function index()
     {
         $user = Auth::guard('client')->user();
-
 
         return view('front.user.index', compact('user'));
     }
@@ -56,6 +57,7 @@ class UserController extends Controller
      */
     public function abolish_order(Request $request, $order_id)
     {
+        if (!Auth::guard('client')->check()) return redirect()->route('front.auth.login')->withErrors('请登录');
         $order = $this->user->returnOrderById($order_id);
         if ($request->isMethod('post')) {  //提交数据
 
@@ -76,65 +78,88 @@ class UserController extends Controller
 
     /**
      * 常购清单
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function favorite()
     {
-        return view('front.user.favorite');
+        $auth = Auth::guard('client');
+        if (!$auth->check()) return redirect()->route('front.auth.login')->withErrors('请登录');
+        $data = $this->user->returnOrderMsgs($auth->user()->id, ['order_status' => 1]);
+
+        return view('front.user.favorite', compact('data'));
     }
 
 
     /**
      * 个人资料
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function profile()
     {
-        return view('front.user.profile');
+        $auth = Auth::guard('client');
+        if (!$auth->check()) return redirect()->route('front.auth.login')->withErrors('请登录');
+        $name = $auth->user()->name;
+
+        return view('front.user.profile', compact('name'));
     }
 
     /**
      * 修改个人用户名
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function change_name()
+    public function change_name(Request $request)
     {
+        $auth = Auth::guard('client');
+        if (!$auth->check()) return redirect()->route('front.auth.login')->withErrors('请登录');
+        if ($request->isMethod('post')) {
+            try {
+                $this->user->updateName($auth->user(), $request->get('name'));
+                return back()->withSuccess('修改成功');
+            } catch (\Exception $exception) {
+                return back()->withErrors('修改失败');
+            }
+        }
         return view('front.user.change_name');
     }
 
     /**
      * 设置
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function user_set()
     {
+        if (!Auth::guard('client')->check()) return redirect()->route('front.auth.login')->withErrors('请登录');
         return view('front.user.user_set');
     }
 
     /**
      * 修改密码
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function change_pwd()
     {
+        if (!Auth::guard('client')->check()) return redirect()->route('front.auth.login')->withErrors('请登录');
         return view('front.user.change_pwd');
     }
 
     /**
      * 文章
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function article()
     {
+        if (!Auth::guard('client')->check()) return redirect()->route('front.auth.login')->withErrors('请登录');
         return view('front.user.article');
     }
 
     /**
      * 登出
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function logout()
     {
+        if (!Auth::guard('client')->check()) return redirect()->route('front.auth.login')->withErrors('请登录');
         return redirect('/user/login')->withSuccess('安全退出成功');
     }
 

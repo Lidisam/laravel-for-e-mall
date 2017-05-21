@@ -18,5 +18,15 @@ class AuthRepository
             'password' => bcrypt($request->get('password'))
         ]);
     }
+
+    /**
+     * @param $user
+     * @param $new_password
+     * @return mixed
+     */
+    public function resetPwd($user, $new_password)
+    {
+        return $user->update(['password' => bcrypt($new_password)]);
+    }
 }
 

@@ -1,0 +1,35 @@
+
+.cations {
+    width: 100%;
+    background-color: #fff;
+    margin-bottom: 3%;
+}
+
+.cations .list {
+    width: 50%;
+    height: 5.2rem;
+    border-right: 1px solid #d8d8d8;
+    border-bottom: 1px solid #d8d8d8;
+}
+
+.cations .list:nth-child(2n) {
+    border-right: none;
+}
+
+.cations .list .tit {
+    width: 100%;
+    font-size: .5rem;
+    color: #333333;
+    padding: .5rem .5rem 0 .5rem;
+}
+
+.cations .list .tu {
+    width: 100%;
+    text-align: center;
+}
+
+.cations .list .tu img {
+    max-width: 100%;
+    vertical-align: middle;
+    max-height: 3.8rem;
+}

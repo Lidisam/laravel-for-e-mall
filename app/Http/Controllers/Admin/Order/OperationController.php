@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Admin\Order;
 
 
-use App\Models\OrdersOperation;
 use App\Repositories\Admin\OperationRepository;
-use App\Repositories\Admin\PaymentRepository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -33,4 +31,5 @@ class OperationController extends Controller
         unset($data['mode']);
         return response()->json($this->op->updateOperation($data, $mode));
     }
+
 }

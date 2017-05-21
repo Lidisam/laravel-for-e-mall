@@ -3,6 +3,7 @@
 namespace App\Repositories\Front;
 
 use App\Models\Ad;
+use App\Models\Categorys;
 use App\Models\Good;
 
 class IndexRepository
@@ -35,6 +36,15 @@ class IndexRepository
     public function returnAds()
     {
         return Ad::where('is_open', '1')->limit(5)->orderBy('created_at', 'desc')->get();
+    }
+
+    /**
+     * 获取四条信息在首页显示分类
+     * @return mixed
+     */
+    public function returnCats()
+    {
+        return Categorys::where('parent_id',0)->take(3)->orderBy('id')->orderBy('order_weight')->get();
     }
 }
 

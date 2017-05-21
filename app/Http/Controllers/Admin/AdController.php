@@ -82,7 +82,7 @@ class AdController extends Controller
         if (!$fileRes['status'])
             return redirect()->back()->withErrors($fileRes['msg']);
         /********保存*******/
-        $this->ad->storeAd($info,$fileRes);
+        $this->ad->storeAd($info, $fileRes);
 
         return redirect('/admin/ad')->withSuccess('添加成功！');
     }
@@ -156,7 +156,7 @@ class AdController extends Controller
     {
         $info = $this->ad->returnById($id);
         if ($info) {
-            $this->ad->deleteById($info);
+            $this->ad->deleteAd($info);
         } else {
             return redirect()->back()
                 ->withErrors("删除失败");

@@ -25,6 +25,7 @@ class OrderController extends Controller
     {
         if (!Auth::guard('client')->check())
             return redirect('user/login')->withErrors('请登录');
+        if (!count(Cart::content())) return back()->withErrors('购物车不能为空');  //购物车为空
         $addressMessage = $this->orderRepository->returnAddressMesssage();
 
         return view('front.order.confirm_order', compact('addressMessage'));

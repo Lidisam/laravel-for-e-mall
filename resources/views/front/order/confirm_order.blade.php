@@ -32,7 +32,7 @@
             @else
                 @foreach(\App\Models\Payment::all() as $k => $v)
                     @if(Session::get('pay') == $v->id)
-                        <label>
+                        <label class="isTrue">
                             <input type="radio" name="pay" checked value="{{ $v->id }}"/>{{ $v->pay_name }}
                         </label>
                     @endif

@@ -42,6 +42,16 @@ class UserRepository
     {
         return $info->update(['is_del' => 1, 'del_msg' => Purifier::clean($reason)]);
     }
+
+    /**
+     * @param $user
+     * @param $name
+     * @return mixed
+     */
+    public function updateName($user, $name)
+    {
+        return $user->update(['name' => $name]);
+    }
 }
 
 

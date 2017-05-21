@@ -16,4 +16,5 @@
         自定义后台HTML输出，此处为文章模块，后台编辑器输出。
     </div>
     </body>
+    @include('front.layouts.mainFooter')
 @stop

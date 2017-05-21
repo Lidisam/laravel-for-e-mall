@@ -18,11 +18,18 @@ class CartRepository
      */
     public function cartToggleSigle(Request $request, $mode = '', array $options = [])
     {
-        $goods = Good::find((int)$request->get('id'));
+        $goods = Good::find((int)$request->get('id'));   //直接从商品中查出is_promote和promote_price
+        $promote = [
+            'is_promote' => $goods->is_promote,
+            'promote_price' => $goods->promote_price,
+            'jifen' => $goods->jifen,
+            'jyz' => $goods->jyz
+        ];
         if (!count($options)) {
             return Cart::add((int)$request->get('id'), $goods->goods_name, intval($mode . (1)), $goods->shop_price);
         }
-        return Cart::add((int)$request->get('id'), $goods->goods_name, intval($mode . (1)), $goods->shop_price, $options);
+        return Cart::add((int)$request->get('id'), $goods->goods_name, intval($mode . (1)), $goods->shop_price,
+            array_merge($options, $promote));
     }
 
     /**

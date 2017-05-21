@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Front\Auth\RegisterRequest;
+use App\Http\Requests\Front\Auth\ResetPwdRequest;
+use Arcanedev\Support\Bases\Model;
 use Illuminate\Http\Request;
 use App\Repositories\Front\AuthRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -57,9 +60,34 @@ class AuthController extends Controller
     {
         $registerUserRes = $this->authRepository->registerUser($request);
         if ($registerUserRes) {
-            return redirect('/user/login')->withSuccess('修改成功！');
+            return redirect('/user/login')->withSuccess('注册成功！');
         } else {
             return back()->withErrors('注册失败');
         }
+    }
+
+    /**
+     * 重新设置密码
+     * @param ResetPwdRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postReSetPwd(ResetPwdRequest $request)
+    {
+        $auth = Auth::guard('client');
+        $password = $auth->user()->password;
+        if ($auth->check()) {
+            $old_password = $request->get('old_password');
+            $new_password = $request->get('new_password');
+            if (Hash::check($old_password, $password)) {
+                try {
+                    $this->authRepository->resetPwd($auth->user(), $new_password);
+                    Auth::guard('client')->attempt(['mobile' => $auth->user()->mobile, 'password' => $new_password]);
+                    return back()->withSuccess('修改成功');
+                } catch (\Exception $e) {
+                    return back()->withSuccess('修改失败');
+                }
+            }
+        }
+        return redirect()->route('front.auth.login')->withErrors('请登录');
     }
 }
